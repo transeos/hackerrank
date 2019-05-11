@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "-g -DDEBUG -std=c++0x")
 
 # source flies
 add_library(Catch2 INTERFACE)
-file(GLOB HACKERRANK_FILES src/*.cpp)
+file(GLOB HACKERRANK_FILES cpp/*.cpp)
 
 # add precompiled headers
 target_include_directories(Catch2 INTERFACE 3rdParty/Catch2/single_include)

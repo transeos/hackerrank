@@ -1,0 +1,11 @@
+"BasedOnStyle": "Google"
+"ColumnLimit": 100
+"ConstructorInitializerAllOnOneLineOrOnePerLine": true
+"DerivePointerAlignment": false
+"PointerAlignment" : "Left"
+"Standard": "Cpp11"
+"SortIncludes" : true
+"IncludeCategories":
+  - Regex:           '.*'
+    Priority:        1
+"AllowShortFunctionsOnASingleLine": "Empty"
