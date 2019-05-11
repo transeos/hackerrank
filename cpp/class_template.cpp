@@ -2,6 +2,8 @@
 //
 //*****************************************************************
 //
+// hackerrank: https://www.hackerrank.com/challenges/c-class-templates/problem
+//
 // WARRANTY:
 // Use all material in this file at your own risk.
 //

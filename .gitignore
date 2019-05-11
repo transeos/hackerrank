@@ -31,5 +31,8 @@
 *.out
 *.app
 
+# temp files
+*.swp
+
 # Directories
 build
