@@ -3,7 +3,7 @@ project(hackerrank)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(CMAKE_CXX_FLAGS "-g -DDEBUG -std=c++0x")
+set(CMAKE_CXX_FLAGS "-g -DDEBUG -std=c++0x -Werror -Wno-unused-function")
 
 # include
 #include_directories(include)
