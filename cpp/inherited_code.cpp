@@ -62,7 +62,7 @@ bool checkUsername(string username) {
   return isValid;
 }
 
-TEST_CASE("inherited_code", "[cpp][easy]") {
+TEST_CASE("inherited_code", "[cpp][medium]") {
   int T;
   cin >> T;
   while (T--) {
