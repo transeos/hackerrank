@@ -2,7 +2,7 @@
 //
 //*****************************************************************
 //
-// hackerrank: https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem
+// hackerrank: https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem
 //
 // WARRANTY:
 // Use all material in this file at your own risk.
@@ -19,59 +19,69 @@
 
 using namespace std;
 
-vector<string> split_string2(string);
+vector<string> split_string3(string);
 
-// Complete the jumpingOnClouds function below.
-int jumpingOnClouds(const vector<int>& c) {
-  int num_jumps = 0;
-  const int num_clouds = c.size();
+// Complete the rotLeft function below.
+vector<int> rotLeft(const vector<int>& orig_arr, int d) {
+  if (d == 0) return orig_arr;
 
-  assert((c.at(0) == 0) && (c.at(num_clouds - 1) == 0));
+  const int num = orig_arr.size();
+  assert(d < num);
 
-  size_t idx = 2;
-  for (; idx < num_clouds; idx += 2) {
-    if (c.at(idx) == 1) {
-      assert(c.at(idx - 1) == 0);
-      idx--;
-    }
-    num_jumps++;
+  vector<int> new_arr(num);
+
+  for (size_t idx = 0; idx < (num - d); ++idx) {
+    new_arr[idx] = orig_arr[idx + d];
   }
 
-  if (idx == num_clouds) {
-    num_jumps++;
+  for (size_t idx = (num - d); idx < num; ++idx) {
+    new_arr[idx] = orig_arr[idx + d - num];
   }
 
-  return num_jumps;
+  return new_arr;
 }
 
-TEST_CASE("jumping_on_the_clouds", "[interview_prep_kit][warm-up][easy]") {
+TEST_CASE("array_left_rotation", "[array_left_rotation][array][easy]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
-  int n;
-  cin >> n;
-  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+  string nd_temp;
+  getline(cin, nd_temp);
 
-  string c_temp_temp;
-  getline(cin, c_temp_temp);
+  vector<string> nd = split_string3(nd_temp);
 
-  vector<string> c_temp = split_string2(c_temp_temp);
+  int n = stoi(nd[0]);
 
-  vector<int> c(n);
+  int d = stoi(nd[1]);
+
+  string a_temp_temp;
+  getline(cin, a_temp_temp);
+
+  vector<string> a_temp = split_string3(a_temp_temp);
+
+  vector<int> a(n);
 
   for (int i = 0; i < n; i++) {
-    int c_item = stoi(c_temp[i]);
+    int a_item = stoi(a_temp[i]);
 
-    c[i] = c_item;
+    a[i] = a_item;
   }
 
-  int result = jumpingOnClouds(c);
+  vector<int> result = rotLeft(a, d);
 
-  fout << result << "\n";
+  for (int i = 0; i < result.size(); i++) {
+    fout << result[i];
+
+    if (i != result.size() - 1) {
+      fout << " ";
+    }
+  }
+
+  fout << "\n";
 
   fout.close();
 }
 
-vector<string> split_string2(string input_string) {
+vector<string> split_string3(string input_string) {
   string::iterator new_end =
       unique(input_string.begin(), input_string.end(),
              [](const char& x, const char& y) { return x == y and x == ' '; });

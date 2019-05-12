@@ -41,7 +41,7 @@ long repeatedString(string s, long n) {
   return ((num_a * num_repeat) + num_remainder_a);
 }
 
-TEST_CASE("repeated_string", "[interview_prep_kit][easy]") {
+TEST_CASE("repeated_string", "[interview_prep_kit][warm-up][easy]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   string s;

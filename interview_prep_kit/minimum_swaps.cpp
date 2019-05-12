@@ -2,74 +2,72 @@
 //
 //*****************************************************************
 //
-// hackerrank: https://www.hackerrank.com/challenges/sock-merchant/problem
+// hackerrank: https://www.hackerrank.com/challenges/minimum-swaps-2/problem
 //
 // WARRANTY:
 // Use all material in this file at your own risk.
 //
-// Created by Hiranmoy on 12/05/19.
+// Created by Hiranmoy on 13/05/19.
 //
 //*****************************************************************
 
 #include <bits/stdc++.h>
 #include <iostream>
-#include <unordered_set>
 
 #include <catch2/catch.hpp>
 
 using namespace std;
 
-vector<string> split_string(string);
+vector<string> split_string4(string);
 
-// Complete the sockMerchant function below.
-int sockMerchant(int n, const vector<int>& ar) {
-  unordered_set<int> single_pair_socks;
-  int pair_count = 0;
+// Complete the minimumSwaps function below.
+int minimumSwaps(vector<int> arr) {
+  int num_swaps = 0;
+  const int num_arr = arr.size();
 
-  for (size_t idx = 0; idx < n; ++idx) {
-    const int sock = ar.at(idx);
+  for (size_t idx = 0; idx < num_arr; ++idx) {
+    int cur_val = arr[idx];
+    while (cur_val != (idx + 1)) {
+      const int temp_val = arr[cur_val - 1];
+      arr[cur_val - 1] = cur_val;
+      arr[idx] = temp_val;
+      cur_val = temp_val;
 
-    auto iter = single_pair_socks.find(sock);
-    if (iter == single_pair_socks.end()) {
-      single_pair_socks.insert(sock);
-    } else {
-      single_pair_socks.erase(iter);
-      // cout << "pair found : " << sock << endl;
-      pair_count++;
+      num_swaps++;
     }
   }
 
-  return pair_count;
+  return num_swaps;
 }
 
-TEST_CASE("sock_merchant", "[interview_prep_kit][warm-up][easy]") {
+TEST_CASE("minimum_swaps", "[interview_prep_kit][array][medium]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   int n;
   cin >> n;
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-  string ar_temp_temp;
-  getline(cin, ar_temp_temp);
+  string arr_temp_temp;
+  getline(cin, arr_temp_temp);
 
-  vector<string> ar_temp = split_string(ar_temp_temp);
+  vector<string> arr_temp = split_string4(arr_temp_temp);
 
-  vector<int> ar(n);
+  vector<int> arr(n);
 
   for (int i = 0; i < n; i++) {
-    int ar_item = stoi(ar_temp[i]);
+    int arr_item = stoi(arr_temp[i]);
 
-    ar[i] = ar_item;
+    arr[i] = arr_item;
   }
 
-  int result = sockMerchant(n, ar);
+  int res = minimumSwaps(arr);
 
-  fout << result << "\n";
+  fout << res << "\n";
 
   fout.close();
 }
 
-vector<string> split_string(string input_string) {
+vector<string> split_string4(string input_string) {
   string::iterator new_end =
       unique(input_string.begin(), input_string.end(),
              [](const char& x, const char& y) { return x == y and x == ' '; });
