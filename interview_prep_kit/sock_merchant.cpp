@@ -42,7 +42,7 @@ int sockMerchant(int n, const vector<int>& ar) {
   return pair_count;
 }
 
-TEST_CASE("sock_merchant", "[interview_prep_kit][easy][incomplete]") {
+TEST_CASE("sock_merchant", "[interview_prep_kit][easy]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   int n;

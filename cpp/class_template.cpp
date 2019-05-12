@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
@@ -30,36 +31,38 @@ class AddElements {
   ~AddElements() {}
 
  private:
-  T element_;
+  const T& element_;
 
  public:
   T add(const T& element);
-  const T& concatenate(const T&);
+  const char* concatenate(const T&);
 };
 
 // TODO: use SFINAE
 
 template <>
 int AddElements<int>::add(const int& element) {
-  element_ += element;
-  return element_;
+  return (element_ + element);
 }
 
 template <>
 double AddElements<double>::add(const double& element) {
-  element_ += element;
-  return element_;
+  return (element_ + element);
 }
 
 template <>
-const string& AddElements<string>::concatenate(const string& element) {
-  element_.append(element);
-  return element_;
+const char* AddElements<string>::concatenate(const string& element) {
+  cout << element_.c_str();
+  return element.c_str();
 }
 
 TEST_CASE("class_template", "[cpp][easy][incomplete]") {
   int n, i;
   cin >> n;
+
+  // start
+  const chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
+
   for (i = 0; i < n; i++) {
     string type;
     cin >> type;
@@ -80,4 +83,11 @@ TEST_CASE("class_template", "[cpp][easy][incomplete]") {
       cout << mystring.concatenate(element2) << endl;
     }
   }
+
+  // end
+  const chrono::high_resolution_clock::time_point end_time = chrono::high_resolution_clock::now();
+
+  // run time
+  const int run_time = chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count();
+  cout << "Time taken : " << run_time << " msec\n";
 }

@@ -39,7 +39,7 @@ int hourglassSum(const vector<vector<int>>& arr) {
   return sum;
 }
 
-TEST_CASE("sock_merchant", "[interview_prep_kit][easy][incomplete]") {
+TEST_CASE("2d_array", "[interview_prep_kit][easy]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   vector<vector<int>> arr(6);

@@ -43,7 +43,7 @@ int countingValleys(int n, string s) {
   return num_vallies;
 }
 
-TEST_CASE("counting_valleys", "[interview_prep_kit][easy][incomplete]") {
+TEST_CASE("counting_valleys", "[interview_prep_kit][easy]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   int n;

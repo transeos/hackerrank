@@ -44,7 +44,7 @@ int jumpingOnClouds(const vector<int>& c) {
   return num_jumps;
 }
 
-TEST_CASE("jumping_on_the_clouds", "[interview_prep_kit][easy][incomplete]") {
+TEST_CASE("jumping_on_the_clouds", "[interview_prep_kit][easy]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   int n;

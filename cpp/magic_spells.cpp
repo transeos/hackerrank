@@ -112,18 +112,21 @@ void counterspell(Spell* spell) {
     return;
   }
 
-  const string& spell_name = spell->revealScrollName();
-  string journal_name = SpellJournal::journal;
+  const string& spell_name = SpellJournal::journal;
+  const string& journal_name = spell->revealScrollName();
 
   int count = 0;
 
   for (size_t idx = 0; idx < spell_name.size(); ++idx) {
     const char c = spell_name.at(idx);
-    std::size_t found = journal_name.find(c);
+    size_t found = 0;
 
-    if (found != string::npos) {
-      count++;
-      journal_name.erase(found, 1);
+    for (size_t jdx = found; jdx < journal_name.size(); ++jdx) {
+      if (journal_name.at(jdx) == c) {
+        found = jdx;
+        count++;
+        break;
+      }
     }
   }
 
