@@ -45,7 +45,7 @@ class Server {
 };
 int Server::load = 0;
 
-TEST_CASE("exceptional_server", "[cpp][medium][incomplete]") {
+TEST_CASE("exceptional_server", "[cpp][medium]") {
   int T;
   cin >> T;
   while (T--) {
@@ -62,15 +62,21 @@ TEST_CASE("exceptional_server", "[cpp][medium][incomplete]") {
     }
 
     /*
-    if (B < 0) {
+    if (invalid_inputs && (B < 0)) {
       invalid_inputs = true;
       cout << "Exception: B is negative" << endl;
     }*/
 
     const long long limit = (1L << 32);
-    if (A > limit) {
+    if (!invalid_inputs && (A > limit)) {
       invalid_inputs = true;
       cout << "Not enough memory\n";
+    }
+
+    if (!invalid_inputs && (B > A)) {
+      invalid_inputs = true;
+      cout << "Exception: vector::_M_range_check: __n (which is " << B;
+      cout << ") >= this->size() (which is " << A << ")\n";
     }
 
     if (invalid_inputs) {

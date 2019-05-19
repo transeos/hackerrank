@@ -22,7 +22,7 @@
 
 using namespace std;
 
-TEST_CASE("bit_array", "[cpp][hard][incomplete]") {
+TEST_CASE("bit_array", "[cpp][hard][incomplete][timeout]") {
   /* Enter your code here. Read input from STDIN. Print output to STDOUT */
 
   const long max = (1L << 31);

@@ -56,7 +56,7 @@ const char* AddElements<string>::concatenate(const string& element) {
   return element.c_str();
 }
 
-TEST_CASE("class_template", "[cpp][easy][incomplete]") {
+TEST_CASE("class_template", "[cpp][easy][incomplete][timeout]") {
   int n, i;
   cin >> n;
 

@@ -157,7 +157,7 @@ class Wizard {
   }
 };
 
-TEST_CASE("magic_spells", "[cpp][hard][incomplete]") {
+TEST_CASE("magic_spells", "[cpp][hard][incomplete][failed]") {
   int T;
   cin >> T;
   Wizard Arawn;

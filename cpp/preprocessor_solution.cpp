@@ -33,7 +33,7 @@ FUNCTION(maximum, >)*/
 
 using namespace std;
 
-TEST_CASE("preprocessor_solution", "[cpp][easy][incomplete]") {
+TEST_CASE("preprocessor_solution", "[cpp][easy][incomplete][failed]") {
   /*
   int n; cin >> n;
         vector<int> v(n);

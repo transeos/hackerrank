@@ -6,10 +6,11 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-g -DDEBUG -std=c++0x -Werror -Wno-unused-function")
 
 # include
-#include_directories(include)
+include_directories(include)
 
 # source flies
 add_library(Catch2 INTERFACE)
+file(GLOB UTILS_FILES utils/*.cpp)
 file(GLOB CPP_FILES cpp/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_FILES interview_prep_kit/*.cpp)
 
@@ -17,5 +18,5 @@ file(GLOB INTERVIEW_PREP_KIT_FILES interview_prep_kit/*.cpp)
 target_include_directories(Catch2 INTERFACE 3rdParty/Catch2/single_include)
 
 # create test executable
-add_executable(hackerrank ${CPP_FILES} ${INTERVIEW_PREP_KIT_FILES})
+add_executable(hackerrank ${UTILS_FILES} ${CPP_FILES} ${INTERVIEW_PREP_KIT_FILES})
 target_link_libraries(hackerrank Catch2)
