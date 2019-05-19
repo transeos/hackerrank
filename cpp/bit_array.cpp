@@ -32,7 +32,7 @@ TEST_CASE("bit_array", "[cpp][hard][incomplete][timeout]") {
   // start
   const chrono::high_resolution_clock::time_point start_time = chrono::high_resolution_clock::now();
 
-  vector<bool> items(max, false);
+  vector<bool> items(numeric_limits<int>::max(), false);
 
   long cur_idx = S;
 
