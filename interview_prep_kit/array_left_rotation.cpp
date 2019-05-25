@@ -40,7 +40,7 @@ vector<int> rotLeft(const vector<int>& orig_arr, int d) {
   return new_arr;
 }
 
-TEST_CASE("array_left_rotation", "[array_left_rotation][array][easy]") {
+TEST_CASE("array_left_rotation", "[interview_prep_kit][array][easy]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   string nd_temp;
