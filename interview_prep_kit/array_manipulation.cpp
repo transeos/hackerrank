@@ -2,7 +2,7 @@
 //
 //*****************************************************************
 //
-// hackerrank: https://www.hackerrank.com/challenges/new-year-chaos/problem
+// hackerrank: https://www.hackerrank.com/challenges/crush/problem
 //
 // WARRANTY:
 // Use all material in this file at your own risk.
