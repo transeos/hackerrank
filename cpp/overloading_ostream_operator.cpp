@@ -35,7 +35,7 @@ class Person {
 // Enter your code here.
 
 ostream& operator<<(ostream& os, const Person& p) {
-  cout << "first_name=" << p.get_first_name() << ",last_name=" << p.get_last_name();
+  os << "first_name=" << p.get_first_name() << ",last_name=" << p.get_last_name();
   return os;
 }
 
