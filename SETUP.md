@@ -5,7 +5,7 @@ git clone --recursive https://github.com/transeos/hackerrank
 ## or update submodules (inside 'hackerrank' repository)
 git submodule update --init --recursive
 
-## build calculator
+## build exe
 mkdir build
 cd build
 cmake ..

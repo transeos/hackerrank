@@ -11,6 +11,8 @@
 //
 //*****************************************************************
 
+// Test case 3 (100000000 923092883 976061291 1205350525) took 11 sec
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -25,7 +27,6 @@ using namespace std;
 TEST_CASE("bit_array", "[cpp][hard][incomplete][timeout]") {
   /* Enter your code here. Read input from STDIN. Print output to STDOUT */
 
-  const long max = (1L << 31);
   long N = 0, S = 0, P = 0, Q = 0;
   cin >> N >> S >> P >> Q;
 
@@ -40,7 +41,7 @@ TEST_CASE("bit_array", "[cpp][hard][incomplete][timeout]") {
   int count = 1;
 
   for (int idx = 1; idx < N; ++idx) {
-    cur_idx = (((cur_idx * P) + Q) % max);
+    cur_idx = (((cur_idx * P) + Q) & 0x7FFFFFFF);
     if (items[cur_idx] == false) {
       items[cur_idx] = true;
       count++;
