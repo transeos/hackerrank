@@ -14,13 +14,12 @@
 // Test case 3 (100000000 923092883 976061291 1205350525) took 11 sec
 
 #include <algorithm>
+#include <catch2/catch.hpp>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <vector>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 
@@ -42,10 +41,8 @@ TEST_CASE("bit_array", "[cpp][hard][incomplete][timeout]") {
 
   for (int idx = 1; idx < N; ++idx) {
     cur_idx = (((cur_idx * P) + Q) & 0x7FFFFFFF);
-    if (items[cur_idx] == false) {
-      items[cur_idx] = true;
-      count++;
-    }
+    count += (!items[cur_idx]);
+    items[cur_idx] = true;
   }
 
   cout << count << endl;
