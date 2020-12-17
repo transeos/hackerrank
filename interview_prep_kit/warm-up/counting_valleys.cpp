@@ -13,9 +13,8 @@
 
 #include <bits/stdc++.h>
 #include <cassert>
-#include <iostream>
-
 #include <catch2/catch.hpp>
+#include <iostream>
 
 using namespace std;
 

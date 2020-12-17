@@ -11,12 +11,11 @@
 //
 //*****************************************************************
 
+#include "utils.h"
 #include <bits/stdc++.h>
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <unordered_set>
-
-#include "utils.h"
-#include <catch2/catch.hpp>
 
 using namespace std;
 

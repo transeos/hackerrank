@@ -12,12 +12,11 @@
 //*****************************************************************
 
 #include <algorithm>
+#include <catch2/catch.hpp>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <vector>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 

@@ -11,12 +11,11 @@
 //
 //*****************************************************************
 
+#include "utils.h"
 #include <bits/stdc++.h>
 #include <cassert>
-#include <iostream>
-
-#include "utils.h"
 #include <catch2/catch.hpp>
+#include <iostream>
 
 #define MAX_EXPENSE 200
 

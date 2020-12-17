@@ -12,11 +12,24 @@ include_directories(include)
 add_library(Catch2 INTERFACE)
 file(GLOB UTILS_FILES utils/*.cpp)
 file(GLOB CPP_FILES cpp/*.cpp)
-file(GLOB INTERVIEW_PREP_KIT_FILES interview_prep_kit/*.cpp)
+
+#interview prep kit
+file(GLOB INTERVIEW_PREP_KIT_ARRAY_FILES interview_prep_kit/array/*.cpp)
+file(GLOB INTERVIEW_PREP_KIT_HASHMAP_FILES interview_prep_kit/hashmaps/*.cpp)
+file(GLOB INTERVIEW_PREP_KIT_RECURSION_FILES interview_prep_kit/recursion/*.cpp)
+file(GLOB INTERVIEW_PREP_KIT_SEARCH_FILES interview_prep_kit/search/*.cpp)
+file(GLOB INTERVIEW_PREP_KIT_SORTING_FILES interview_prep_kit/sorting/*.cpp)
+file(GLOB INTERVIEW_PREP_KIT_WARMUP_FILES interview_prep_kit/warm-up/*.cpp)
 
 # add precompiled headers
 target_include_directories(Catch2 INTERFACE 3rdParty/Catch2/single_include)
 
 # create test executable
-add_executable(hackerrank ${UTILS_FILES} ${CPP_FILES} ${INTERVIEW_PREP_KIT_FILES})
+add_executable(hackerrank ${UTILS_FILES} ${CPP_FILES}
+                          ${INTERVIEW_PREP_KIT_ARRAY_FILES}
+                          ${INTERVIEW_PREP_KIT_HASHMAP_FILES}
+                          ${INTERVIEW_PREP_KIT_RECURSION_FILES}
+                          ${INTERVIEW_PREP_KIT_SEARCH_FILES}
+                          ${INTERVIEW_PREP_KIT_SORTING_FILES}
+                          ${INTERVIEW_PREP_KIT_WARMUP_FILES})
 target_link_libraries(hackerrank Catch2)
