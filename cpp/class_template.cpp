@@ -10,18 +10,34 @@
 // Created by Hiranmoy on 11/05/19.
 //
 //*****************************************************************
+//
+// Need to enable #define cout to decrease running time
 
 #include <algorithm>
 #include <cassert>
+#include <catch2/catch.hpp>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
-#include <catch2/catch.hpp>
-
 using namespace std;
+
+class data_AddElements {
+ public:
+  data_AddElements() {}
+  ~data_AddElements() {
+    printf("%s", ss_.str().c_str());
+  }
+
+  stringstream ss_;
+};
+
+data_AddElements g_print_data_AddElements;
+
+//#define cout g_print_data_AddElements.ss_
 
 /*Write the class AddElements here*/
 template <typename T>
@@ -37,8 +53,6 @@ class AddElements {
   T add(const T& element);
   const char* concatenate(const T&);
 };
-
-// TODO: use SFINAE
 
 template <>
 int AddElements<int>::add(const int& element) {
@@ -56,7 +70,7 @@ const char* AddElements<string>::concatenate(const string& element) {
   return element.c_str();
 }
 
-TEST_CASE("class_template", "[cpp][easy][incomplete][timeout]") {
+TEST_CASE("class_template", "[cpp][easy]") {
   int n, i;
   cin >> n;
 
