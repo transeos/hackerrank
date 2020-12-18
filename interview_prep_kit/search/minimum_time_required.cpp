@@ -15,29 +15,46 @@
 #include <bits/stdc++.h>
 #include <cassert>
 #include <catch2/catch.hpp>
+#include <cmath>
 #include <iostream>
 
 using namespace std;
 
+// get approximate value
+long getInitValue(vector<long>& machines, long goal) {
+  double production_compute = 0;
+  for (long machine : machines) {
+    production_compute += (1 / (double)machine);
+  }
+
+  production_compute = (goal / production_compute);
+  cout << "== approximate value : " << production_compute << " ==" << endl;
+
+  return floor(production_compute);
+}
+
 // Complete the minTime function below.
-long minTime(vector<long> machines, long goal) {
+long minTime(vector<long>& machines, long goal) {
+  long cur_production = 0;
+  long cur_time = getInitValue(machines, goal);
+
   // <time, <day, quantity>>
   map<long, unordered_map<long, int>> remaining_days;
   for (long machine : machines) {
-    auto iter = remaining_days.find(machine);
+    long production = (cur_time / machine);
+    cur_production += production;
+    long next_time = ((production + 1) * machine);
+
+    auto iter = remaining_days.find(next_time);
     if (iter == remaining_days.end()) {
       unordered_map<long, int> entry;
       entry[machine] = 1;
-      remaining_days[machine] = entry;
+      remaining_days[next_time] = entry;
     } else {
       auto& cur_entry = iter->second;
       cur_entry[machine]++;
-      assert(cur_entry.size() == 1);
     }
   }
-
-  long cur_production = 0;
-  long cur_time = 0;
 
   while (cur_production < goal) {
     auto begining = remaining_days.begin();
@@ -70,7 +87,7 @@ long minTime(vector<long> machines, long goal) {
   return cur_time;
 }
 
-TEST_CASE("minimum_time_required", "[interview_prep_kit][search][medium][incomplete]") {
+TEST_CASE("minimum_time_required", "[interview_prep_kit][search][medium]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   string nGoal_temp;
