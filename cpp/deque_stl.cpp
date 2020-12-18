@@ -74,7 +74,7 @@ void printKMax(int arr[], int n, int k) {
   cout << endl;
 }
 
-TEST_CASE("deque_stl", "[cpp][medium][incomplete]") {
+TEST_CASE("deque_stl", "[cpp][medium]") {
   int t;
   cin >> t;
 

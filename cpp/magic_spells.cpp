@@ -11,11 +11,10 @@
 //
 //*****************************************************************
 
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 
@@ -115,22 +114,45 @@ void counterspell(Spell* spell) {
   const string& spell_name = SpellJournal::journal;
   const string& journal_name = spell->revealScrollName();
 
-  int count = 0;
+  const int spell_len = spell_name.size();
+  const int journal_len = journal_name.size();
 
-  for (size_t idx = 0; idx < spell_name.size(); ++idx) {
-    const char c = spell_name.at(idx);
-    size_t found = 0;
+  vector<vector<string>> matched_str;
+  matched_str.resize(spell_len + 1);
 
-    for (size_t jdx = found; jdx < journal_name.size(); ++jdx) {
-      if (journal_name.at(jdx) == c) {
-        found = jdx;
-        count++;
-        break;
-      }
+  for (size_t i = 0; i <= spell_len; ++i) {
+    matched_str[i].resize(journal_len + 1);
+    matched_str[i][0] = "";
+  }
+
+  for (size_t j = 0; j <= journal_len; ++j) {
+    matched_str[0][j] = "";
+  }
+
+  for (size_t i = 1; i <= spell_len; ++i) {
+    for (size_t j = 1; j <= journal_len; ++j) {
+      int data1 = ((spell_name[i - 1] == journal_name[j - 1]) + matched_str[i - 1][j - 1].length());
+      int data2 = matched_str[i - 1][j].length();
+      int data3 = matched_str[i][j - 1].length();
+
+      if (data1 > data2) {
+        if (data1 > data3) {
+          matched_str[i][j] = matched_str[i - 1][j - 1];
+          if (spell_name[i - 1] == journal_name[j - 1]) {
+            matched_str[i][j].push_back(spell_name[i - 1]);
+          }
+        } else {
+          matched_str[i][j] = matched_str[i][j - 1];
+        }
+      } else if (data2 > data3)
+        matched_str[i][j] = matched_str[i - 1][j];
+      else
+        matched_str[i][j] = matched_str[i][j - 1];
     }
   }
 
-  cout << count << endl;
+  // cout << matched_str[spell_len][journal_len] << ", length:";
+  cout << matched_str[spell_len][journal_len].length() << endl;
 }
 
 class Wizard {
@@ -157,7 +179,7 @@ class Wizard {
   }
 };
 
-TEST_CASE("magic_spells", "[cpp][hard][incomplete][failed]") {
+TEST_CASE("magic_spells", "[cpp][hard]") {
   int T;
   cin >> T;
   Wizard Arawn;
