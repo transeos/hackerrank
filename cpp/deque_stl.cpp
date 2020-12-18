@@ -12,50 +12,63 @@
 //*****************************************************************
 
 #include <algorithm>
+#include <catch2/catch.hpp>
 #include <chrono>
 #include <deque>
 #include <iostream>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 
 void printKMax(int arr[], int n, int k) {
   // Write your code here.
 
-  deque<int> sub_arr = {arr[0]};
-  deque<int> max_elms = {arr[0]};
+  deque<int> sub_arr;
+  int max_val = 0;
+  int num_max_elm = 0;
 
-  for (int idx = 1; idx < k; ++idx) {
-    const int cur_item = arr[idx];
-    sub_arr.push_back(cur_item);
-    if (max_elms.back() >= cur_item) {
-      max_elms.push_back(max_elms.front());
-    } else
-      max_elms.push_back(cur_item);
+  auto update_max = [&max_val, &num_max_elm](const int cur_val) {
+    if (max_val < cur_val) {
+      max_val = cur_val;
+      num_max_elm = 1;
+    } else if (max_val == cur_val) {
+      num_max_elm++;
+    }
+  };
+
+  for (size_t idx = 0; idx < k; ++idx) {
+    const int cur_val = arr[idx];
+    sub_arr.push_back(cur_val);
+
+    update_max(cur_val);
   }
-  cout << max_elms[k - 1];
 
-  for (int idx = 1; idx < (n - k + 1); ++idx) {
+  // first max element
+  cout << max_val;
+
+  for (size_t idx = k; idx < n; ++idx) {
+    const int cur_val = arr[idx];
+    sub_arr.push_back(cur_val);
+
+    update_max(cur_val);
+
     const int last_elm = sub_arr.front();
     sub_arr.pop_front();
-    sub_arr.push_back(arr[idx + k - 1]);
 
-    const int last_max_elm = max_elms.front();
-    max_elms.pop_front();
-    if (last_max_elm != last_elm) continue;
+    if (max_val == last_elm) {
+      num_max_elm--;
 
-    max_elms[0] = sub_arr[0];
+      if (num_max_elm == 0) {
+        max_val = 0;
 
-    for (int idx = 1; idx < (k - 1); ++idx) {
-      if (max_elms[idx] == last_elm) {
-        max_elms[idx] = max(sub_arr[idx], max_elms[idx - 1]);
+        // find current max
+        for (int cur_val : sub_arr) {
+          update_max(cur_val);
+        }
       }
     }
 
-    max_elms.push_back(max(sub_arr[k - 1], max_elms[k - 2]));
-
-    cout << " " << max_elms[k - 1];
+    // max element
+    cout << " " << max_val;
   }
 
   cout << endl;
