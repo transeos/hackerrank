@@ -106,5 +106,4 @@ TEST_CASE("attending_workshops", "[cpp][medium]") {
   Available_Workshops* ptr;
   ptr = initialize(start_time, duration, n);
   cout << CalculateMaxWorkshops(ptr) << endl;
-  return;
 }

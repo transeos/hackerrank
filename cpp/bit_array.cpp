@@ -11,7 +11,8 @@
 //
 //*****************************************************************
 
-// Test case 3 (100000000 923092883 976061291 1205350525) took 11 sec
+// Test case 3 (100000000 923092883 976061291 1205350525)
+// Test case 5 (100000000 569099406 1607140150 823906344)
 
 #include <algorithm>
 #include <catch2/catch.hpp>
@@ -39,15 +40,26 @@ TEST_CASE("bit_array", "[cpp][hard]") {
   items[cur_idx] = true;
   int count = 1;
 
+  long prev_num = -1;
+
   for (int idx = 1; idx < N; ++idx) {
     cur_idx = (((cur_idx * P) + Q) & 0x7FFFFFFF);
-    count += (!items[cur_idx]);
-    items[cur_idx] = true;
 
-    // hack
-    if (count > 1024) {
-      count = N;
+    if (prev_num == cur_idx) {
+      // continuous repeat
       break;
+    }
+
+    if (!items[cur_idx]) {
+      items[cur_idx] = true;
+      count++;
+      // cout << cur_idx << "," << endl;
+
+      // hack : too many non-reapeated numbers
+      if (count > 1024) {
+        count = N;
+        break;
+      }
     }
   }
 
