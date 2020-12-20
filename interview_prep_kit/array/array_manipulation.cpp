@@ -55,7 +55,7 @@ long arrayManipulation(int n, const vector<vector<int>>& queries) {
   return max_val;
 }
 
-TEST_CASE("array_manipulation", "[interview_prep_kit][array][hard]") {
+TEST_CASE("array_manipulation", "[interview_prep_kit][array][hard][star]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   string nm_temp;

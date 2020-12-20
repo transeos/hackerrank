@@ -24,7 +24,7 @@
 
 using namespace std;
 
-TEST_CASE("bit_array", "[cpp][hard]") {
+TEST_CASE("bit_array", "[cpp][hard][star]") {
   /* Enter your code here. Read input from STDIN. Print output to STDOUT */
 
   long N = 0, S = 0, P = 0, Q = 0;

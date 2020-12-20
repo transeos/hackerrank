@@ -30,10 +30,9 @@
 
 #define FUNCTION(a, b)
 
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <vector>
-
-#include <catch2/catch.hpp>
 
 #if !defined toStr || !defined io || !defined FUNCTION || !defined INF
 #error Missing preprocessor definitions
@@ -44,7 +43,7 @@ FUNCTION(maximum, >)
 
 using namespace std;
 
-TEST_CASE("preprocessor_solution", "[cpp][easy]") {
+TEST_CASE("preprocessor_solution", "[cpp][easy][star]") {
   int n;
   cin >> n;
   vector<int> v(n);

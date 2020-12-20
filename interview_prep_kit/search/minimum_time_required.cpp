@@ -87,7 +87,7 @@ long minTime(vector<long>& machines, long goal) {
   return cur_time;
 }
 
-TEST_CASE("minimum_time_required", "[interview_prep_kit][search][medium]") {
+TEST_CASE("minimum_time_required", "[interview_prep_kit][search][medium][star]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   string nGoal_temp;

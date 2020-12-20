@@ -70,7 +70,7 @@ const char* AddElements<string>::concatenate(const string& element) {
   return element.c_str();
 }
 
-TEST_CASE("class_template", "[cpp][easy]") {
+TEST_CASE("class_template", "[cpp][easy][star]") {
   int n, i;
   cin >> n;
 

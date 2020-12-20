@@ -11,14 +11,13 @@
 //
 //*****************************************************************
 
+#include <catch2/catch.hpp>
 #include <cmath>
 #include <exception>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 
@@ -45,7 +44,7 @@ class Server {
 };
 int Server::load = 0;
 
-TEST_CASE("exceptional_server", "[cpp][medium]") {
+TEST_CASE("exceptional_server", "[cpp][medium][star]") {
   int T;
   cin >> T;
   while (T--) {
