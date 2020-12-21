@@ -1,0 +1,153 @@
+// -*- C++ -*-
+//
+//*****************************************************************
+//
+// hackerrank:
+// https://www.hackerrank.com/challenges/find-the-merge-point-of-two-joined-linked-lists/problem
+//
+// WARRANTY:
+// Use all material in this file at your own risk.
+//
+// Created by Hiranmoy on 21/12/19.
+//
+//*****************************************************************
+
+#include "utils.h"
+#include <bits/stdc++.h>
+#include <catch2/catch.hpp>
+#include <iostream>
+
+using namespace std;
+
+using namespace std;
+
+class SinglyLinkedListNode {
+ public:
+  int data;
+  SinglyLinkedListNode* next;
+
+  SinglyLinkedListNode(int node_data) {
+    this->data = node_data;
+    this->next = nullptr;
+  }
+};
+
+class SinglyLinkedList {
+ public:
+  SinglyLinkedListNode* head;
+  SinglyLinkedListNode* tail;
+
+  SinglyLinkedList() {
+    this->head = nullptr;
+    this->tail = nullptr;
+  }
+
+  void insert_node(int node_data) {
+    SinglyLinkedListNode* node = new SinglyLinkedListNode(node_data);
+
+    if (!this->head) {
+      this->head = node;
+    } else {
+      this->tail->next = node;
+    }
+
+    this->tail = node;
+  }
+};
+
+// Complete the findMergeNode function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+int findMergeNode(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
+  unordered_set<SinglyLinkedListNode*> nodes;
+
+  SinglyLinkedListNode* cur_node1 = head1;
+  while (cur_node1) {
+    nodes.insert(cur_node1);
+    cur_node1 = cur_node1->next;
+  }
+
+  SinglyLinkedListNode* cur_node2 = head2;
+  while (cur_node2) {
+    if (nodes.find(cur_node2) != nodes.end()) {
+      return cur_node2->data;
+    }
+
+    cur_node2 = cur_node2->next;
+  }
+
+  return -1;
+}
+
+TEST_CASE("merge_point", "[interview_prep_kit][linked_list][easy]") {
+  ofstream fout(getenv("OUTPUT_PATH"));
+
+  int tests;
+  cin >> tests;
+  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+  for (int tests_itr = 0; tests_itr < tests; tests_itr++) {
+    int index;
+    cin >> index;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    SinglyLinkedList* llist1 = new SinglyLinkedList();
+
+    int llist1_count;
+    cin >> llist1_count;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    for (int i = 0; i < llist1_count; i++) {
+      int llist1_item;
+      cin >> llist1_item;
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+      llist1->insert_node(llist1_item);
+    }
+
+    SinglyLinkedList* llist2 = new SinglyLinkedList();
+
+    int llist2_count;
+    cin >> llist2_count;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    for (int i = 0; i < llist2_count; i++) {
+      int llist2_item;
+      cin >> llist2_item;
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+      llist2->insert_node(llist2_item);
+    }
+
+    SinglyLinkedListNode* ptr1 = llist1->head;
+    SinglyLinkedListNode* ptr2 = llist2->head;
+
+    for (int i = 0; i < llist1_count; i++) {
+      if (i < index) {
+        ptr1 = ptr1->next;
+      }
+    }
+
+    for (int i = 0; i < llist2_count; i++) {
+      if (i != llist2_count - 1) {
+        ptr2 = ptr2->next;
+      }
+    }
+
+    ptr2->next = ptr1;
+
+    int result = findMergeNode(llist1->head, llist2->head);
+
+    fout << result << "\n";
+  }
+
+  fout.close();
+}
