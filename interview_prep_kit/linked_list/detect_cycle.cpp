@@ -27,13 +27,13 @@ struct Node {
 /*
 Detect a cycle in a linked list. Note that the head pointer may be 'NULL' if the list is empty.
 */
-bool has_cycle(Node* head) {
+bool has_cycle(const Node* head) {
   // Complete this function
   // Do not write the main method
 
-  unordered_set<Node*> nodes;
+  unordered_set<const Node*> nodes;
 
-  Node* cur_node = head;
+  const Node* cur_node = head;
 
   while (cur_node) {
     if (nodes.find(cur_node) != nodes.end()) {
