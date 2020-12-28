@@ -31,9 +31,6 @@ class City {
     index_ = index;
   }
 
-  int32_t GetNumAdjacentCities() const {
-    return adjacency_.size();
-  }
   void AddAdjacency(const int city) {
     adjacency_.push_back(city);
   }
