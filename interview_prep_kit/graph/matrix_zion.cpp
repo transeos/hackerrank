@@ -10,8 +10,6 @@
 // Created by Hiranmoy on 28/12/19.
 //
 //*****************************************************************
-//
-// Test case 7 takes 3813 ms
 
 #include "utils.h"
 #include <bits/stdc++.h>
@@ -135,16 +133,13 @@ class Zion {
     for (size_t idx = 0; idx < roads_.size(); ++idx) {
       Road& road = roads_[idx];
 
-#ifdef DEBUG_MATRIX_ZION
-      g_num_visited_nodes = 0;
-#endif
-
       // look for machines in both directions
       if (FindMachine(road.GetCity1(), road.GetCity2()) &&
           FindMachine(road.GetCity2(), road.GetCity1())) {
         // this road will be destroyed
 
 #ifdef DEBUG_MATRIX_ZION
+        cout << "[" << idx << "] ";
         cout << road.GetCity1() << "," << road.GetCity2() << " = " << road.GetTime();
         cout << ", cities visited: " << g_num_visited_nodes << endl;
 #endif
@@ -176,6 +171,9 @@ class Zion {
 #endif
 
     City& city = cities_[city_idx];
+    if (city.IsVisited()) {
+      return false;
+    }
     if (city.HasMachine()) {
       return true;
     }
@@ -213,7 +211,7 @@ int minTime(const vector<vector<int>>& roads, const vector<int>& machines) {
   return zion.DestroyRoads(machines);
 }
 
-TEST_CASE("matrix_zion", "[interview_prep_kit][graph][hard][star][incomplete][timeout]") {
+TEST_CASE("matrix_zion", "[interview_prep_kit][graph][hard][star]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   // start
