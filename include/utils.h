@@ -21,3 +21,5 @@ void print_singly_linked_list(SinglyLinkedListNode* node, std::string sep, std::
 void free_singly_linked_list(SinglyLinkedListNode* node);
 void print_doubly_linked_list(DoublyLinkedListNode* node, std::string sep, std::ofstream& fout);
 void free_doubly_linked_list(DoublyLinkedListNode* node);
+
+size_t HighestOneBitPosition(uint64_t a);
