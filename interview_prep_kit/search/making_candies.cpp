@@ -25,23 +25,6 @@
 
 using namespace std;
 
-size_t HighestOneBitPosition(uint64_t a) {
-  size_t bits = 0;
-
-  while (a != 0) {
-    ++bits;
-    a >>= 1;
-  };
-
-  return bits;
-}
-
-bool MultiplicationIsSafe(uint64_t a, uint64_t b) {
-  size_t a_bits = HighestOneBitPosition(a);
-  size_t b_bits = HighestOneBitPosition(b);
-  return ((a_bits + b_bits) <= 64);
-}
-
 // r1 > r2
 bool BalanceMachinesAndWorkers(const uint64_t r1, uint64_t& r2, uint64_t& c, const uint64_t p,
                                const uint64_t n, uint64_t& max_resource_increment) {
