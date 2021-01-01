@@ -16,6 +16,9 @@ class SinglyLinkedListNode;
 class DoublyLinkedListNode;
 
 std::vector<std::string> split_string(std::string input_string, const char delimiter = ' ');
+std::vector<std::string> split(const std::string&);
+std::string ltrim(const std::string&);
+std::string rtrim(const std::string&);
 
 void print_singly_linked_list(SinglyLinkedListNode* node, std::string sep, std::ofstream& fout);
 void free_singly_linked_list(SinglyLinkedListNode* node);

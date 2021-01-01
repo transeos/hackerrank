@@ -47,7 +47,7 @@ int sherlockAndAnagrams(const string& s) {
   return num_anagrams;
 }
 
-TEST_CASE("sherlock_anagrams", "[interview_prep_kit][recursion][medium][star]") {
+TEST_CASE("sherlock_anagrams", "[interview_prep_kit][hashmaps][medium][star]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   int q;
