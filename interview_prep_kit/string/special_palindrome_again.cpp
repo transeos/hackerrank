@@ -19,7 +19,7 @@
 using namespace std;
 
 // Complete the substrCount function below.
-long substrCount(int n, const string& s) {
+long substrCount(const int n, const string& s) {
   // single characters
   long num_palindrome = n;
 
