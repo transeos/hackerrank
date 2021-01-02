@@ -25,6 +25,7 @@ file(GLOB INTERVIEW_PREP_KIT_TREE_FILES interview_prep_kit/tree/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_STACKS_QUEUES_FILES interview_prep_kit/stacks_queues/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_GRAPH_FILES interview_prep_kit/graph/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_MISCELLANEOUS_FILES interview_prep_kit/miscellaneous/*.cpp)
+file(GLOB INTERVIEW_PREP_KIT_STRING_FILES interview_prep_kit/string/*.cpp)
 
 # add precompiled headers
 target_include_directories(Catch2 INTERFACE 3rdParty/Catch2/single_include)
@@ -41,5 +42,6 @@ add_executable(hackerrank ${UTILS_FILES} ${CPP_FILES}
                           ${INTERVIEW_PREP_KIT_TREE_FILES}
                           ${INTERVIEW_PREP_KIT_STACKS_QUEUES_FILES}
                           ${INTERVIEW_PREP_KIT_GRAPH_FILES}
-                          ${INTERVIEW_PREP_KIT_MISCELLANEOUS_FILES})
+                          ${INTERVIEW_PREP_KIT_MISCELLANEOUS_FILES}
+                          ${INTERVIEW_PREP_KIT_STRING_FILES})
 target_link_libraries(hackerrank Catch2)
