@@ -12,3 +12,4 @@ cmake ..
 make
 
 ## Now you'll have hackerrank executable file.
+"./hackerrank -l" prints all test cases
