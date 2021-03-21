@@ -23,8 +23,8 @@ void countSwaps(vector<int>& a) {
   int num_swaps = 0;
 
   const int num_elements = a.size();
-  for (int i = 0; i < num_elements; i++) {
-    for (int j = 0; j < (num_elements - 1); j++) {
+  for (int i = 0; i < (num_elements - 1); i++) {
+    for (int j = 0; j < (num_elements - i - 1); j++) {
       // Swap adjacent elements if they are in decreasing order
       if (a[j] > a[j + 1]) {
         swap(a[j], a[j + 1]);

@@ -40,7 +40,7 @@ int sherlockAndAnagrams(const string& s) {
   }
 
   for (auto iter : sub_strings) {
-    // ncr
+    // nC2
     num_anagrams += ((iter.second * (iter.second - 1)) / 2);
   }
 

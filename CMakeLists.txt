@@ -10,10 +10,14 @@ include_directories(include)
 
 # source flies
 add_library(Catch2 INTERFACE)
+
+# utils/common functions
 file(GLOB UTILS_FILES utils/*.cpp)
+
+# C++
 file(GLOB CPP_FILES cpp/*.cpp)
 
-#interview prep kit
+# interview prep kit
 file(GLOB INTERVIEW_PREP_KIT_ARRAY_FILES interview_prep_kit/array/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_HASHMAP_FILES interview_prep_kit/hashmaps/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_RECURSION_FILES interview_prep_kit/recursion/*.cpp)
@@ -28,6 +32,9 @@ file(GLOB INTERVIEW_PREP_KIT_MISCELLANEOUS_FILES interview_prep_kit/miscellaneou
 file(GLOB INTERVIEW_PREP_KIT_STRING_FILES interview_prep_kit/string/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_GREEDY_FILES interview_prep_kit/greedy/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_DP_FILES interview_prep_kit/DP/*.cpp)
+
+#problem solving
+file(GLOB PROBLEM_SOLVING problem_solving/*.cpp)
 
 # add precompiled headers
 target_include_directories(Catch2 INTERFACE 3rdParty/Catch2/single_include)
@@ -47,5 +54,6 @@ add_executable(hackerrank ${UTILS_FILES} ${CPP_FILES}
                           ${INTERVIEW_PREP_KIT_MISCELLANEOUS_FILES}
                           ${INTERVIEW_PREP_KIT_STRING_FILES}
                           ${INTERVIEW_PREP_KIT_GREEDY_FILES}
-                          ${INTERVIEW_PREP_KIT_DP_FILES})
+                          ${INTERVIEW_PREP_KIT_DP_FILES}
+                          ${PROBLEM_SOLVING})
 target_link_libraries(hackerrank Catch2)

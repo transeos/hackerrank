@@ -146,7 +146,7 @@ int findShortest(const int num_graph_nodes, const vector<int>& graph_from,
       }
 
       next_node.SetDistance((cur_node->GetDistance() + 1), cur_node->GetVisitedLabel());
-      ;
+
       visited_nodes.push(&next_node);
       return numeric_limits<int>::max();
     });

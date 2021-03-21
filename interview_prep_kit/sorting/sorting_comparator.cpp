@@ -2,7 +2,7 @@
 //
 //*****************************************************************
 //
-// hackerrank: https://www.hackerrank.com/challenges/mark-and-toys/problem
+// hackerrank: https://www.hackerrank.com/challenges/ctci-comparator-sorting/problem
 //
 // WARRANTY:
 // Use all material in this file at your own risk.

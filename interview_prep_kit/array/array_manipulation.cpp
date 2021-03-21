@@ -35,8 +35,8 @@ long arrayManipulation(int n, const vector<vector<int>>& queries) {
   int arr_size = queries.size();
   for (size_t query_idx = 0; query_idx < arr_size; ++query_idx) {
     const int32_t increment = queries[query_idx][2];
-    data.push_back({(queries[query_idx][0] - 1), increment});
-    data.push_back({queries[query_idx][1], ((-1) * increment)});
+    data.emplace_back((queries[query_idx][0] - 1), increment);
+    data.emplace_back(queries[query_idx][1], ((-1) * increment));
   }
 
   sort(data.begin(), data.end(), ComparePairFn);
