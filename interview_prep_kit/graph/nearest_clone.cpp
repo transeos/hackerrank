@@ -73,12 +73,6 @@ class ColorNode {
   vector<int> adjacent_nodes_;
 };
 
-bool MinPriorityColorNodeFn(const ColorNode* lhs, const ColorNode* rhs) {
-  // dijkstra
-
-  return (lhs->GetDistance() > rhs->GetDistance());
-}
-
 /*
  * For the unweighted graph, <name>:
  *
@@ -94,9 +88,13 @@ int findShortest(const int num_graph_nodes, const vector<int>& graph_from,
 
   vector<ColorNode> nodes;
 
-  priority_queue<ColorNode*, vector<ColorNode*>,
-                 std::function<bool(const ColorNode*, const ColorNode*)>>
-      visited_nodes(MinPriorityColorNodeFn);
+  auto ColorNodeComp = [](const ColorNode* lhs, const ColorNode* rhs) {
+    // dijkstra
+    return (lhs->GetDistance() > rhs->GetDistance());
+  };
+
+  priority_queue<ColorNode*, vector<ColorNode*>, decltype(ColorNodeComp)> visited_nodes(
+      ColorNodeComp);
 
   int num_target_color_nodes = 0;
 
