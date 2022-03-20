@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(hackerrank)
 
-set(CMAKE_CXX_STANDARD 14)
-
-set(CMAKE_CXX_FLAGS "-g -DDEBUG -Werror -Wno-unused-function")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-ggdb3 -DDEBUG -Werror -Wno-unused-function -std=c++17 -fno-inline -fconcepts")
 
 # include
 include_directories(include)
