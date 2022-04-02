@@ -12,24 +12,24 @@
 //*****************************************************************
 
 #include <algorithm>
+#include <catch2/catch.hpp>
 #include <cstdio>
 #include <iostream>
 
-#include <catch2/catch.hpp>
-
 using namespace std;
 
-/*
-Add `int max_of_four(int a, int b, int c, int d)` here.
-*/
-
-int max_of_four(int a, int b, int c, int d) {
-  return max(max(a, b), max(c, d));
+template <typename T0, typename... Ts>
+const T0& MaxOf(const T0& t0, const Ts&... ts) {
+  if constexpr (sizeof...(ts)) {
+    return std::max(t0, MaxOf(ts...));
+  } else {
+    return t0;
+  }
 }
 
 TEST_CASE("functions", "[cpp][easy]") {
   int a, b, c, d;
   scanf("%d %d %d %d", &a, &b, &c, &d);
-  int ans = max_of_four(a, b, c, d);
-  printf("%d", ans);
+  int ans = MaxOf(a, b, c, d);
+  printf("%d\n", ans);
 }

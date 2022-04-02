@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <catch2/catch.hpp>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
@@ -20,41 +21,40 @@
 #include <set>
 #include <vector>
 
-#include <catch2/catch.hpp>
-
 using namespace std;
 
 TEST_CASE("maps", "[cpp][easy]") {
   /* Enter your code here. Read input from STDIN. Print output to STDOUT */
 
-  map<string, int> marks_map;
+  map<string, int32_t> data;
 
-  int num_queries = 0;
-  cin >> num_queries;
+  uint32_t numQueries = 0;
+  cin >> numQueries;
 
-  for (int idx = 0; idx < num_queries; ++idx) {
-    int query_type = 0, marks = 0;
+  for (size_t i = 0; i < numQueries; ++i) {
+    uint32_t query;
     string name;
+    uint32_t marks;
 
-    cin >> query_type >> name;
-    map<string, int>::iterator marks_iter = marks_map.find(name);
+    cin >> query >> name;
 
-    switch (query_type) {
+    switch (query) {
       case 1:
         cin >> marks;
-        if (marks_iter == marks_map.end()) {
-          marks_map[name] = marks;
-        } else {
-          marks_iter->second += marks;
+        if (auto iter2 = data.try_emplace(name, marks); !iter2.second) {
+          iter2.first->second += marks;
         }
         break;
       case 2:
-        if (marks_iter != marks_map.end()) {
-          marks_map.erase(marks_iter);
-        }
+        data.erase(name);
         break;
       case 3:
-        cout << ((marks_iter != marks_map.end()) ? marks_iter->second : 0) << endl;
+        if (auto iter = data.find(name); iter != data.end()) {
+          cout << iter->second;
+        } else {
+          cout << 0;
+        }
+        cout << endl;
         break;
       default:
         assert(0);

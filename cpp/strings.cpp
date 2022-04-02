@@ -11,22 +11,24 @@
 //
 //*****************************************************************
 
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <string>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 
 TEST_CASE("strings", "[cpp][easy]") {
   // Complete the program
 
-  string str1, str2;
-
+  string str1 = "";
+  string str2 = "";
   cin >> str1;
   cin >> str2;
 
-  cout << str1.size() << " " << str2.size() << endl;
-  cout << (str1 + str2) << endl;
-  cout << str2[0] << str1.substr(1) << " " << str1[0] << str2.substr(1) << endl;
+  string_view str1View(str1);
+  string_view str2View(str2);
+
+  cout << str1.length() << " " << str2.length() << endl;
+  cout << str1 << str2 << endl;
+  cout << str2[0] << str1View.substr(1) << " " << str1[0] << str2View.substr(1) << endl;
 }
