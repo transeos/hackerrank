@@ -11,10 +11,9 @@
 //
 //*****************************************************************
 
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <stdexcept>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 
@@ -37,11 +36,12 @@ void process_input(int n) {
   try {
     int d = largest_proper_divisor(n);
     cout << "result=" << d << endl;
-  } catch (exception& e) {
+  } catch (const std::invalid_argument& e) {
     cout << e.what() << endl;
+  } catch (...) {
   }
 
-  cout << "returning control flow to caller\n";
+  cout << "returning control flow to caller" << endl;
 }
 
 TEST_CASE("exception_handling", "[cpp][medium]") {

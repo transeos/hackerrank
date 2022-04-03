@@ -11,9 +11,8 @@
 //
 //*****************************************************************
 
-#include <iostream>
-
 #include <catch2/catch.hpp>
+#include <iostream>
 
 using namespace std;
 
@@ -23,43 +22,28 @@ enum class Color { red, green, orange };
 template <typename T>
 struct Traits;
 
-string printFruitName(int index) {
-  switch (static_cast<Fruit>(index)) {
-    case Fruit::apple:
-      return "apple";
-    case Fruit::orange:
-      return "orange";
-    case Fruit::pear:
-      return "pear";
-    default:
-      return "unknown";
-  }
-}
-
-string printColorName(int index) {
-  switch (static_cast<Color>(index)) {
-    case Color::red:
-      return "red";
-    case Color::green:
-      return "green";
-    case Color::orange:
-      return "orange";
-    default:
-      return "unknown";
-  }
-}
-
-// Define specializations for the Traits class template here.
 template <typename T>
 struct Traits {
-  // std::function<const char*(int)> name;
-  static string (*name)(int);
+  static string name(const int index) {
+    if ((index < 0) || (index > 2)) {
+      return "unknown";
+    }
+
+    if constexpr (std::is_same_v<T, Fruit> || std::is_same_v<T, Color>) {
+      return output[index];
+    } else {
+      return "unknown";
+    }
+  }
+
+ private:
+  static array<string, 3> output;
 };
 
 template <>
-string (*Traits<Fruit>::name)(int) = printFruitName;
+array<string, 3> Traits<Fruit>::output = {"apple", "orange", "pear"};
 template <>
-string (*Traits<Color>::name)(int) = printColorName;
+array<string, 3> Traits<Color>::output = {"red", "green", "orange"};
 
 TEST_CASE("class_template_specialization", "[cpp][medium]") {
   int t = 0;

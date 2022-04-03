@@ -44,7 +44,7 @@ class Server {
 };
 int Server::load = 0;
 
-TEST_CASE("exceptional_server", "[cpp][medium][star]") {
+TEST_CASE("exceptional_server", "[cpp][medium]") {
   int T;
   cin >> T;
   while (T--) {
@@ -52,45 +52,17 @@ TEST_CASE("exceptional_server", "[cpp][medium][star]") {
     cin >> A >> B;
 
     /* Enter your code here. */
-
-    bool invalid_inputs = false;
-
-    if (A < 0) {
-      invalid_inputs = true;
-      cout << "Exception: A is negative\n";
-    }
-
-    /*
-    if (invalid_inputs && (B < 0)) {
-      invalid_inputs = true;
-      cout << "Exception: B is negative" << endl;
-    }*/
-
-    const long long limit = (1L << 32);
-    if (!invalid_inputs && (A > limit)) {
-      invalid_inputs = true;
-      cout << "Not enough memory\n";
-    }
-
-    if (!invalid_inputs && (B > A)) {
-      invalid_inputs = true;
-      cout << "Exception: vector::_M_range_check: __n (which is " << B;
-      cout << ") >= this->size() (which is " << A << ")\n";
-    }
-
-    if (invalid_inputs) {
-      Server::compute(10, 1);
-      continue;
-    }
-
     try {
       cout << Server::compute(A, B) << endl;
+    } catch (const std::invalid_argument& e) {
+      cout << "Exception: " << e.what() << endl;
+    } catch (const std::bad_alloc& e) {
+      cout << "Not enough memory" << endl;
+    } catch (const exception& e) {
+      cout << "Exception: " << e.what() << endl;
     } catch (...) {
-      cout << "Other Exception\n";
+      cout << "Other Exception" << endl;
     }
-    /*catch (exception& e) {
-      cout << "Exception: " << e.what() << '\n';
-    }*/
   }
   cout << Server::getLoad() << endl;
 }

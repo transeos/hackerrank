@@ -19,43 +19,48 @@
 using namespace std;
 
 class Message {
- public:
-  Message() : str_(""), index_(-1) {}
-  Message(const string& str, const int32_t index) : str_(str), index_(index) {}
-  ~Message() {}
-
-  const string& get_text() const {
-    return str_;
-  }
-  const int32_t GetIndex() const {
-    return index_;
-  }
+  friend class MessageFactory;
 
  private:
-  string str_;
-  int32_t index_;
+  uint32_t _id;
+  string _data;
+
+  Message(const uint32_t id, const string& text) : _id(id), _data(text) {}
+
+ public:
+  Message(const Message& msg) : _id(msg._id), _data(msg._data) {}
+
+  const string& get_text() const {
+    return _data;
+  }
+
+  friend bool operator<(const Message& lhs, const Message& rhs);
+  friend void swap(Message&& lhs, Message&& rhs);
 };
 
-bool operator==(const Message& lhs, const Message& rhs) {
-  return lhs.GetIndex() == rhs.GetIndex();
-}
-bool operator>(const Message& lhs, const Message& rhs) {
-  return lhs.GetIndex() > rhs.GetIndex();
-}
 bool operator<(const Message& lhs, const Message& rhs) {
-  return lhs.GetIndex() < rhs.GetIndex();
+  return lhs._id < rhs._id;
+}
+
+void swap(Message&& lhs, Message&& rhs) {
+  std::pair<uint32_t, string> tempData(lhs._id, lhs._data);
+  lhs._id = rhs._id;
+  lhs._data = rhs._data;
+  rhs._id = std::get<0>(tempData);
+  rhs._data = std::get<1>(tempData);
 }
 
 class MessageFactory {
- public:
-  MessageFactory() : counter_(-1) {}
-  Message create_message(const string& text) {
-    counter_++;
-    return Message(text, counter_);
-  }
-
  private:
-  int32_t counter_;
+  uint32_t _msgCount;
+
+ public:
+  MessageFactory() : _msgCount(0) {}
+
+  Message create_message(const string& text) {
+    _msgCount++;
+    return Message(_msgCount, text);
+  }
 };
 
 class Recipient {
