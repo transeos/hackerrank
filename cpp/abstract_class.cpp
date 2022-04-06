@@ -15,13 +15,12 @@
 
 #include <algorithm>
 #include <cassert>
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <map>
 #include <set>
 #include <string>
 #include <vector>
-
-#include <catch2/catch.hpp>
 
 using namespace std;
 
@@ -46,65 +45,65 @@ class Cache {
 
 class LRUCache : public Cache {
  public:
-  LRUCache(int cap) : Cache() {
-    cp = cap;
+  LRUCache(const int capacity) : Cache() {
+    cp = capacity;
     tail = nullptr;
     head = nullptr;
   }
-  ~LRUCache() {}
+  virtual ~LRUCache() {}
 
-  virtual void set(int key, int val) override {
-    auto iter = mp.find(key);
-    if (iter == mp.end()) {
-      struct Node* new_node = new Node(key, val);
-      mp[key] = new_node;
+  virtual void set(int key, int val) {
+    if (auto iter = mp.find(key); iter != mp.end()) {
+      Node* curNode = iter->second;
+      curNode->value = val;
 
-      if (!tail) {
-        tail = new_node;
+      if (curNode != head) {
+        if (curNode == tail) {
+          tail = tail->prev;
+          tail->next = nullptr;
+        } else {
+          Node* curNodeNext = curNode->next;
+          Node* curNodePrev = curNode->prev;
+
+          curNodePrev->next = curNodeNext;
+          curNodeNext->prev = curNodePrev;
+        }
+
+        head->prev = curNode;
+        curNode->prev = nullptr;
+        curNode->next = head;
+        head = curNode;
       }
-
-      if (head) {
-        new_node->next = head;
-        head->prev = new_node;
-      }
-      head = new_node;
-
-      if (mp.size() > cp) {
-        Node* new_tail = tail->prev;
+    } else {
+      if (mp.size() == cp) {
+        Node* newTail = tail->prev;
+        newTail->next = nullptr;
 
         mp.erase(tail->key);
         delete tail;
 
-        new_tail->next = nullptr;
-        tail = new_tail;
+        tail = newTail;
       }
-    } else {
-      Node* new_head = iter->second;
-      new_head->value = val;
 
-      if (new_head != head) {
-        if (new_head == tail) {
-          tail = tail->prev;
-          tail->next = nullptr;
-        } else {
-          Node* prev_left = new_head->prev;
-          Node* prev_right = new_head->next;
+      Node* newNode = new Node(nullptr, head, key, val);
+      mp[key] = newNode;
 
-          prev_left->next = prev_right;
-          prev_right->prev = prev_left;
-        }
-
-        head->prev = new_head;
-        new_head->next = head;
-        new_head = head;
+      if (head != nullptr) {
+        head->prev = newNode;
+      } else {
+        tail = newNode;
       }
+
+      head = newNode;
     }
-
-    assert(mp.size() <= cp);
   }
+
   virtual int get(int key) override {
-    auto iter = mp.find(key);
-    return ((iter != mp.end()) ? iter->second->value : -1);
+    if (auto iter = mp.find(key); iter != mp.end()) {
+      return iter->second->value;
+    } else {
+      return -1;
+    }
   }
 };
 

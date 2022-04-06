@@ -11,25 +11,21 @@
 //
 //*****************************************************************
 
-#include <iostream>
-
 #include <catch2/catch.hpp>
+#include <iostream>
 
 using namespace std;
 
 // Enter your code for reversed_binary_value<bool...>()
-
-template <bool b = false>
+template <bool b, bool... digits>
 int reversed_binary_value() {
-  return b;
-}
+  int result = 0;
+  if constexpr (sizeof...(digits)) {
+    result = reversed_binary_value<digits...>();
+  }
+  result = (result * 2) + b;
 
-template <bool b1, bool b2, bool... digits>
-int reversed_binary_value() {
-  static_assert(sizeof...(digits) < 5);
-  const int z = ((b1 << (4 - sizeof...(digits))) + (b2 << (5 - sizeof...(digits))) +
-                 reversed_binary_value<digits...>());
-  return z;
+  return result;
 }
 
 template <int n, bool... digits>

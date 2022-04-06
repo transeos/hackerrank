@@ -84,75 +84,66 @@ class SpellJournal {
 };
 string SpellJournal::journal = "";
 
-void counterspell(Spell* spell) {
-  /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+template <typename T, typename... Ts>
+bool CheckForKnownSpells(Spell* spell) {
+  if (T* knownSpell = dynamic_cast<T*>(spell); knownSpell != nullptr) {
+    if constexpr (std::is_same_v<T, Fireball>) {
+      knownSpell->revealFirepower();
+    } else if constexpr (std::is_same_v<T, Frostbite>) {
+      knownSpell->revealFrostpower();
+    } else if constexpr (std::is_same_v<T, Waterbolt>) {
+      knownSpell->revealWaterpower();
+    } else if constexpr (std::is_same_v<T, Thunderstorm>) {
+      knownSpell->revealThunderpower();
+    }
 
-  Fireball* fire_spell = dynamic_cast<Fireball*>(spell);
-  if (fire_spell) {
-    fire_spell->revealFirepower();
-    return;
+    return true;
   }
 
-  Frostbite* frost_spell = dynamic_cast<Frostbite*>(spell);
-  if (frost_spell) {
-    frost_spell->revealFrostpower();
-    return;
+  if constexpr (sizeof...(Ts)) {
+    return CheckForKnownSpells<Ts...>(spell);
   }
 
-  Waterbolt* water_spell = dynamic_cast<Waterbolt*>(spell);
-  if (water_spell) {
-    water_spell->revealWaterpower();
-    return;
-  }
+  return false;
+}
 
-  Thunderstorm* thunder_spell = dynamic_cast<Thunderstorm*>(spell);
-  if (thunder_spell) {
-    thunder_spell->revealThunderpower();
-    return;
-  }
+size_t FindLongestSubsequenceLength(const string& seq1, const string& seq2) {
+  vector<vector<size_t>> lenMatrix(seq1.length() + 1);
 
-  const string& spell_name = SpellJournal::journal;
-  const string& journal_name = spell->revealScrollName();
+  for_each(lenMatrix.begin(), lenMatrix.end(), [&seq2](vector<size_t>& row) {
+    row.resize(seq2.length() + 1);
+    row[0] = 0;
+  });
 
-  const int spell_len = spell_name.size();
-  const int journal_len = journal_name.size();
+  for_each(lenMatrix[0].begin(), lenMatrix[0].end(), [](size_t& elm) { elm = 0; });
 
-  vector<vector<string>> matched_str;
-  matched_str.resize(spell_len + 1);
+  for (size_t i = 1; i <= seq1.length(); ++i) {
+    for (size_t j = 1; j <= seq2.length(); ++j) {
+      size_t curLen = lenMatrix[i - 1][j - 1];
 
-  for (size_t i = 0; i <= spell_len; ++i) {
-    matched_str[i].resize(journal_len + 1);
-    matched_str[i][0] = "";
-  }
+      if (seq1[i - 1] == seq2[j - 1]) {
+        curLen++;
+      }
 
-  for (size_t j = 0; j <= journal_len; ++j) {
-    matched_str[0][j] = "";
-  }
-
-  for (size_t i = 1; i <= spell_len; ++i) {
-    for (size_t j = 1; j <= journal_len; ++j) {
-      int data1 = ((spell_name[i - 1] == journal_name[j - 1]) + matched_str[i - 1][j - 1].length());
-      int data2 = matched_str[i - 1][j].length();
-      int data3 = matched_str[i][j - 1].length();
-
-      if (data1 > data2) {
-        if (data1 > data3) {
-          matched_str[i][j] = matched_str[i - 1][j - 1];
-          if (spell_name[i - 1] == journal_name[j - 1]) {
-            matched_str[i][j].push_back(spell_name[i - 1]);
-          }
-        } else {
-          matched_str[i][j] = matched_str[i][j - 1];
-        }
-      } else if (data2 > data3)
-        matched_str[i][j] = matched_str[i - 1][j];
-      else
-        matched_str[i][j] = matched_str[i][j - 1];
+      lenMatrix[i][j] = std::max(curLen, std::max(lenMatrix[i][j - 1], lenMatrix[i - 1][j]));
     }
   }
 
-  // cout << matched_str[spell_len][journal_len] << ", length:";
-  cout << matched_str[spell_len][journal_len].length() << endl;
+  return lenMatrix[seq1.length()][seq2.length()];
+}
+
+void counterspell(Spell* spell) {
+  /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+
+  if (spell == nullptr) {
+    return;
+  }
+
+  if (CheckForKnownSpells<Fireball, Frostbite, Waterbolt, Thunderstorm>(spell)) {
+    return;
+  }
+
+  cout << FindLongestSubsequenceLength(spell->revealScrollName(), SpellJournal::read()) << endl;
 }
 
 class Wizard {
