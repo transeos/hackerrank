@@ -19,21 +19,16 @@
 using namespace std;
 
 // Complete the whatFlavors function below.
-void whatFlavors(const vector<int>& cost, int money) {
-  const int num_flavors = cost.size();
-  unordered_map<int, int> visited_flavors;
+void whatFlavors(const vector<int>& cost, const int money) {
+  std::unordered_map<int, size_t> costMap;
 
-  for (int idx = 0; idx < num_flavors; ++idx) {
-    const int cur_flavor = cost[idx];
-    const int complementory_flavor = (money - cur_flavor);
-
-    auto iter = visited_flavors.find(complementory_flavor);
-    if (iter != visited_flavors.end()) {
-      cout << (iter->second + 1) << " " << (idx + 1) << endl;
+  for (size_t i = 0; i < cost.size(); ++i) {
+    if (auto it = costMap.find(money - cost[i]); it != costMap.end()) {
+      cout << (it->second + 1) << " " << (i + 1) << endl;
       return;
     }
 
-    visited_flavors[cur_flavor] = idx;
+    costMap[cost[i]] = i;
   }
 }
 

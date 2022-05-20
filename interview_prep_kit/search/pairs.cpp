@@ -19,30 +19,24 @@
 using namespace std;
 
 // Complete the pairs function below.
-int pairs(int k, const vector<int>& arr) {
-  unordered_set<int> target_nums;
-  const int max = 2147483647;
-  int num_pairs = 0;
+int32_t pairs(const int32_t k, const vector<int>& arr) {
+  std::unordered_set<int32_t> numbers;
 
-  for (int cur_val : arr) {
-    target_nums.insert(cur_val);
+  int32_t numPairs = 0;
 
-    if (cur_val > k) {
-      const int target_num = (cur_val - k);
-      if (target_nums.find(target_num) != target_nums.end()) {
-        num_pairs++;
-      }
+  for_each(arr.begin(), arr.end(), [k, &numPairs, &numbers](int num) {
+    if (numbers.find(num + k) != numbers.end()) {
+      numPairs++;
     }
 
-    if (cur_val < (max - k)) {
-      const int target_num = (cur_val + k);
-      if (target_nums.find(target_num) != target_nums.end()) {
-        num_pairs++;
-      }
+    if (k <= num && numbers.find(num - k) != numbers.end()) {
+      numPairs++;
     }
-  }
 
-  return num_pairs;
+    numbers.insert(num);
+  });
+
+  return numPairs;
 }
 
 TEST_CASE("pairs", "[interview_prep_kit][search][medium]") {

@@ -18,64 +18,63 @@
 using namespace std;
 
 class TreeNode {
- public:
-  TreeNode(int value, int depth) : val_(value), depth_(depth) {}
-  ~TreeNode() {}
-
-  int GetValue() const {
-    return val_;
-  }
-  int GetDepth() const {
-    return depth_;
-  }
-
-  shared_ptr<TreeNode>& GetLeftChild() {
-    return left_child_;
-  }
-  shared_ptr<TreeNode>& GetRightChild() {
-    return right_child_;
-  }
-
-  void SetLeftChild(shared_ptr<TreeNode>& node) {
-    left_child_ = node;
-  }
-  void SetRightChild(shared_ptr<TreeNode>& node) {
-    right_child_ = node;
-  }
-
-  void GetTree(vector<int>& arr) const {
-    if (left_child_) {
-      left_child_->GetTree(arr);
-    }
-
-    arr.push_back(val_);
-
-    if (right_child_) {
-      right_child_->GetTree(arr);
-    }
-  }
-
-  void Swap(const int target_depth) {
-    if ((depth_ % target_depth) == 0) {
-      shared_ptr<TreeNode> temp = left_child_;
-      left_child_ = right_child_;
-      right_child_ = temp;
-    }
-    if (left_child_) {
-      left_child_->Swap(target_depth);
-    }
-    if (right_child_) {
-      right_child_->Swap(target_depth);
-    }
-  }
-
  private:
-  int val_;
+  int32_t _depth;
+  int32_t _data;
 
-  shared_ptr<TreeNode> left_child_;
-  shared_ptr<TreeNode> right_child_;
+  int32_t _left;
+  int32_t _right;
 
-  int depth_;
+ public:
+  TreeNode() : _data(0), _depth(0), _left(-1), _right(-1) {}
+
+  void SetDepth(int32_t depth) {
+    assert(_depth == 0);
+    _depth = depth;
+  }
+  int32_t GetDepth() const {
+    return _depth;
+  }
+
+  void SetData(int32_t data) {
+    assert(_data == 0);
+    _data = data;
+  }
+
+  void SetLeft(int32_t left) {
+    assert(_left == -1);
+    _left = left;
+  }
+  void SetRight(int32_t right) {
+    assert(_right == -1);
+    _right = right;
+  }
+
+  void PrintTree(const vector<TreeNode>& nodes, vector<int>& result) const {
+    if (_left != -1) {
+      nodes[_left].PrintTree(nodes, result);
+    }
+
+    result.push_back(_data);
+
+    if (_right != -1) {
+      nodes[_right].PrintTree(nodes, result);
+    }
+  }
+
+  void SwapNodes(vector<TreeNode>& nodes, const int32_t depthMultiplier) {
+    if (_depth % depthMultiplier == 0) {
+      std::swap(_left, _right);
+    }
+
+    if (_left != -1) {
+      nodes[_left].SwapNodes(nodes, depthMultiplier);
+    }
+
+    if (_right != -1) {
+      nodes[_right].SwapNodes(nodes, depthMultiplier);
+    }
+  }
 };
 
 /*
@@ -86,38 +85,32 @@ vector<vector<int>> swapNodes(const vector<vector<int>>& indexes, const vector<i
    * Write your code here.
    */
 
-  vector<vector<int>> result;
+  vector<vector<int>> result(queries.size());
 
-  // create root node
-  auto root = make_shared<TreeNode>(1, 1);
+  vector<TreeNode> nodes(indexes.size());
+  for (size_t i = 0; i < nodes.size(); ++i) {
+    nodes[i].SetData(i + 1);
+  }
 
-  deque<shared_ptr<TreeNode>> nodes;
-  nodes.push_back(root);
+  nodes[0].SetDepth(1);
 
-  for (size_t row_idx = 0; row_idx < indexes.size(); ++row_idx) {
-    shared_ptr<TreeNode> cur_node = nodes.front();
-    nodes.pop_front();
-    assert(cur_node);
-
-    const int left_child_val = indexes[row_idx][0];
-    if (left_child_val != -1) {
-      auto left_child = make_shared<TreeNode>(left_child_val, (cur_node->GetDepth() + 1));
-      cur_node->SetLeftChild(left_child);
-      nodes.push_back(left_child);
+  for (size_t i = 0; i < indexes.size(); ++i) {
+    const int32_t leftChildIndex = indexes[i][0] - 1;
+    if (leftChildIndex != -2) {
+      nodes[i].SetLeft(leftChildIndex);
+      nodes[leftChildIndex].SetDepth(nodes[i].GetDepth() + 1);
     }
 
-    const int right_child_val = indexes[row_idx][1];
-    if (right_child_val != -1) {
-      auto right_child = make_shared<TreeNode>(right_child_val, (cur_node->GetDepth() + 1));
-      cur_node->SetRightChild(right_child);
-      nodes.push_back(right_child);
+    const int32_t rightChildIndex = indexes[i][1] - 1;
+    if (rightChildIndex != -2) {
+      nodes[i].SetRight(rightChildIndex);
+      nodes[rightChildIndex].SetDepth(nodes[i].GetDepth() + 1);
     }
   }
 
-  result.resize(queries.size());
-  for (size_t idx = 0; idx < queries.size(); ++idx) {
-    root->Swap(queries[idx]);
-    root->GetTree(result[idx]);
+  for (size_t i = 0; i < queries.size(); ++i) {
+    nodes[0].SwapNodes(nodes, queries[i]);
+    nodes[0].PrintTree(nodes, result[i]);
   }
 
   return result;
