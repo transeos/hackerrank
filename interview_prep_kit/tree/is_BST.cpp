@@ -16,9 +16,6 @@
 #include <catch2/catch.hpp>
 #include <iostream>
 
-#define MAX_INT 2147483647
-#define MIN_INT -2147483648
-
 using namespace std;
 
 /* Hidden stub code will pass a root argument to the function below. Complete the function to solve
@@ -31,29 +28,21 @@ struct Node {
   Node* right;
 };
 
-bool checkBST(const Node* root, int max_val = MAX_INT, int min_val = MIN_INT) {
-  if ((max_val == MAX_INT) && (min_val == MIN_INT)) {
-    // root node
-    if (!root) {
-      return false;
-    }
+bool checkBST(Node* root, const int minVal = -1, int maxVal = 10001) {
+  if ((root->data >= maxVal) || (root->data <= minVal)) {
+    return false;
   }
 
   if (root->left) {
-    if ((root->left->data >= root->data) || (root->left->data <= min_val)) {
-      return false;
-    }
-
-    if (!checkBST(root->left, root->data, min_val)) {
+    if (!checkBST(root->left, minVal, root->data)) {
       return false;
     }
   }
 
   if (root->right) {
-    if ((root->right->data <= root->data) || (root->right->data >= max_val)) {
+    if (!checkBST(root->right, root->data, maxVal)) {
       return false;
     }
-    return checkBST(root->right, max_val, root->data);
   }
 
   return true;
