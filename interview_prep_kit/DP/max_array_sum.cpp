@@ -19,17 +19,26 @@
 using namespace std;
 
 // Complete the maxSubsetSum function below.
-int maxSubsetSum(const vector<int>& arr) {
-  int max_sum = std::max(arr[0], 0);
-  int prev_sum = 0;
-
-  for (size_t idx = 1; idx < arr.size(); ++idx) {
-    const int temp = max_sum;
-    max_sum = std::max(prev_sum + arr[idx], max_sum);
-    prev_sum = temp;
+int64_t maxSubsetSum(const vector<int>& arr) {
+  if (arr.size() == 0) {
+    return 0;
   }
 
-  return max_sum;
+  int64_t maxSumWithoutLastElm = 0;
+  int64_t maxSum = max(0, arr[0]);
+
+  for (size_t i = 1; i < arr.size(); ++i) {
+    if (arr[i] <= 0) {
+      maxSumWithoutLastElm = maxSum;
+      continue;
+    }
+
+    const int64_t prevMaxSum = maxSum;
+    maxSum = max(maxSum, maxSumWithoutLastElm + (int64_t)arr[i]);
+    maxSumWithoutLastElm = prevMaxSum;
+  }
+
+  return maxSum;
 }
 
 TEST_CASE("max_array_sum", "[interview_prep_kit][DP][medium]") {
