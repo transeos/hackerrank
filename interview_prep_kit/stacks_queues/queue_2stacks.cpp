@@ -18,50 +18,45 @@
 
 using namespace std;
 
-/*
 class MyQueue {
-public:
-  MyQueue() { }
-  ~MyQueue() { }
+ private:
+  std::stack<int> _newestOnTop;
+  std::stack<int> _oldestOnTop;
 
+  void PopulateOldestOnTopStack() {
+    while (!_newestOnTop.empty()) {
+      _oldestOnTop.push(_newestOnTop.top());
+      _newestOnTop.pop();
+    }
+  }
+
+ public:
   void push(const int x) {
-    TransferFromOldToNew();
-
-    stack_newest_on_top.push(x);
+    _newestOnTop.push(x);
   }
 
   void pop() {
-    TransferFromNewToOld();
+    if (_oldestOnTop.empty()) {
+      PopulateOldestOnTopStack();
+    }
 
-    stack_oldest_on_top.pop();
+    if (!_oldestOnTop.empty()) {
+      _oldestOnTop.pop();
+    }
   }
 
   int front() {
-    TransferFromNewToOld();
+    if (_oldestOnTop.empty()) {
+      PopulateOldestOnTopStack();
+    }
 
-    return stack_oldest_on_top.top();
-  }
-
-private:
-  stack<int> stack_newest_on_top;
-  stack<int> stack_oldest_on_top;
-
-  inline void TransferFromNewToOld() {
-    while (!stack_newest_on_top.empty()) {
-      stack_oldest_on_top.push(stack_newest_on_top.top());
-      stack_newest_on_top.pop();
+    if (!_oldestOnTop.empty()) {
+      return _oldestOnTop.top();
+    } else {
+      return -1;
     }
   }
-
-  inline void TransferFromOldToNew() {
-    while (!stack_oldest_on_top.empty()) {
-      stack_newest_on_top.push(stack_oldest_on_top.top());
-      stack_oldest_on_top.pop();
-    }
-  }
-};*/
-
-typedef queue<int> MyQueue;
+};
 
 TEST_CASE("queue_2stacks", "[interview_prep_kit][stacks_queues][medium]") {
   MyQueue q1;
