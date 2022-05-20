@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.2)
 project(hackerrank)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-ggdb3 -DDEBUG -Werror -Wno-unused-function -std=c++17 -fno-inline -fconcepts")
+set(CMAKE_CXX_FLAGS "-ggdb3 -DDEBUG -Werror -Wno-unused-function -fno-inline -fconcepts")
+
+find_package(TBB REQUIRED)
 
 # include
 include_directories(include)
@@ -55,4 +57,4 @@ add_executable(hackerrank ${UTILS_FILES} ${CPP_FILES}
                           ${INTERVIEW_PREP_KIT_GREEDY_FILES}
                           ${INTERVIEW_PREP_KIT_DP_FILES}
                           ${PROBLEM_SOLVING})
-target_link_libraries(hackerrank Catch2)
+target_link_libraries(hackerrank Catch2 ${TBB_IMPORTED_TARGETS})

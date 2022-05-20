@@ -20,35 +20,27 @@ using namespace std;
 
 // Complete the checkMagazine function below.
 void checkMagazine(const vector<string>& magazine, const vector<string>& note) {
-  unordered_map<string, int> source_words;
+  std::unordered_map<string, size_t> magazineWords;
 
-  const int num_words = magazine.size();
-  for (int idx = 0; idx < num_words; ++idx) {
-    const string& cur_word = magazine.at(idx);
-
-    auto iter = source_words.find(cur_word);
-    if (iter == source_words.end()) {
-      source_words[cur_word] = 1;
-    } else {
-      iter->second++;
+  std::for_each(magazine.begin(), magazine.end(), [&magazineWords](const string& word) {
+    if (auto it = magazineWords.try_emplace(word, 1); it.second == false) {
+      it.first->second++;
     }
-  }
+  });
 
-  const int num_note_words = note.size();
-  for (int idx = 0; idx < num_note_words; ++idx) {
-    auto iter = source_words.find(note[idx]);
-    if (iter == source_words.end()) {
-      cout << "No";
+  for (auto& word : note) {
+    if (auto it = magazineWords.find(word); it == magazineWords.end()) {
+      cout << "No" << endl;
       return;
     } else {
-      iter->second--;
-      if (iter->second == 0) {
-        source_words.erase(iter);
+      it->second--;
+      if (it->second == 0) {
+        magazineWords.erase(it);
       }
     }
   }
 
-  cout << "Yes";
+  cout << "Yes" << endl;
 }
 
 TEST_CASE("ransom_note", "[interview_prep_kit][hashmaps][easy]") {

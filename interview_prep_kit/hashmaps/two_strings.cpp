@@ -13,27 +13,25 @@
 
 #include <bits/stdc++.h>
 #include <catch2/catch.hpp>
+#include <execution>
 #include <iostream>
 
 using namespace std;
 
 // Complete the twoStrings function below.
-const char* twoStrings(string s1, string s2) {
-  vector<bool> chars(128, false);
+bool checkForExclusiveChar(const string& smallerWord, const string& biggerWord) {
+  std::unordered_set letters(smallerWord.begin(), smallerWord.end());
 
-  const int s1_len = s1.size();
-  for (int idx = 0; idx < s1_len; ++idx) {
-    chars[s1[idx]] = true;
-  }
+  const bool noCommonChar =
+      std::none_of(std::execution::par_unseq, biggerWord.begin(), biggerWord.end(),
+                   [&letters](auto ch) { return letters.find(ch) != letters.end(); });
+  return noCommonChar;
+}
 
-  const int s2_len = s2.size();
-  for (int idx = 0; idx < s2_len; ++idx) {
-    if (chars[s2[idx]]) {
-      return "YES";
-    }
-  }
-
-  return "NO";
+string twoStrings(const string& s1, const string& s2) {
+  const bool noCommonChar =
+      s1.length() < s2.length() ? checkForExclusiveChar(s1, s2) : checkForExclusiveChar(s2, s1);
+  return noCommonChar ? "NO" : "YES";
 }
 
 TEST_CASE("two_strings", "[interview_prep_kit][hashmaps][easy]") {
