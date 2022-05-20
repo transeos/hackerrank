@@ -18,26 +18,17 @@
 using namespace std;
 
 // Complete the repeatedString function below.
-long repeatedString(string s, long n) {
-  const long str_len = s.size();
+uint64_t repeatedString(const string& s, uint64_t n) {
+  uint64_t repeatsInSubStrBegin = 0;
 
-  const long num_repeat = (n / str_len);
-  const long remainder = (n - (str_len * num_repeat));
-
-  int num_a = 0;
-  int num_remainder_a = 0;
-
-  for (size_t idx = 0; idx < remainder; ++idx) {
-    num_remainder_a += (s.at(idx) == 'a');
+  size_t subStrLen = n % s.length();
+  if (subStrLen != 0) {
+    repeatsInSubStrBegin = std::count(s.begin(), s.begin() + subStrLen, 'a');
   }
 
-  num_a = num_remainder_a;
+  uint64_t repeatsInSubStrEnd = std::count(s.begin() + subStrLen, s.end(), 'a');
 
-  for (size_t idx = remainder; idx < str_len; ++idx) {
-    num_a += (s.at(idx) == 'a');
-  }
-
-  return ((num_a * num_repeat) + num_remainder_a);
+  return ((repeatsInSubStrBegin + repeatsInSubStrEnd) * (n / s.length())) + repeatsInSubStrBegin;
 }
 
 TEST_CASE("repeated_string", "[interview_prep_kit][warm-up][easy]") {
