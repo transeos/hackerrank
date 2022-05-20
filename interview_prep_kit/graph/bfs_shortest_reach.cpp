@@ -19,43 +19,45 @@
 
 using namespace std;
 
+#define EDGE_LEN 6
+
 class Graph {
+ private:
+  vector<vector<int32_t>> _adjacencyMatrix;
+
  public:
-  Graph(int n) {
-    adjacency_.resize(n);
-  }
-  ~Graph() {}
+  Graph(int n) : _adjacencyMatrix(n) {}
 
-  void add_edge(const int u, const int v) {
-    adjacency_[u].push_back(v);
-    adjacency_[v].push_back(u);
+  void add_edge(int u, int v) {
+    _adjacencyMatrix[u].push_back(v);
+    _adjacencyMatrix[v].push_back(u);
   }
 
-  vector<int> shortest_reach(int start) {
-    vector<int> distances(adjacency_.size(), -1);
+  vector<int> shortest_reach(const int32_t start) {
+    vector<int> distances(_adjacencyMatrix.size(), -1);
+
+    std::queue<size_t> visitedNodes;
 
     distances[start] = 0;
-    deque<int> visited_nodes(1, start);
+    visitedNodes.push(start);
 
-    while (!visited_nodes.empty()) {
-      const int cur_node_idx = visited_nodes.front();
-      const int cur_dist = distances[cur_node_idx];
-      visited_nodes.pop_front();
+    while (visitedNodes.size() > 0) {
+      const size_t curNodeIndex = visitedNodes.front();
+      visitedNodes.pop();
 
-      for (auto& node_idx : adjacency_[cur_node_idx]) {
-        if (distances[node_idx] == -1) {
-          // not visited before
-          distances[node_idx] = (cur_dist + 6);
-          visited_nodes.push_back(node_idx);
-        }
-      }
+      const int curDistance = distances[curNodeIndex];
+
+      for_each(_adjacencyMatrix[curNodeIndex].begin(), _adjacencyMatrix[curNodeIndex].end(),
+               [&visitedNodes, &distances, curDistance, curNodeIndex](int32_t nodeIndex) {
+                 if (distances[nodeIndex] == -1) {
+                   distances[nodeIndex] = curDistance + EDGE_LEN;
+                   visitedNodes.push(nodeIndex);
+                 }
+               });
     }
 
     return distances;
   }
-
- private:
-  vector<vector<int>> adjacency_;
 };
 
 TEST_CASE("bfs_shortest_reach", "[interview_prep_kit][graph][medium]") {

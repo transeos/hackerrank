@@ -18,95 +18,98 @@
 
 using namespace std;
 
-void IncreseRegionSize(vector<int>& regions, const unordered_map<int, int>& renamed_regions,
-                       const int col_idx, const int increment = 1) {
-  // check for rename
-
-  int increment_col = col_idx;
-
-  auto iter = renamed_regions.find(col_idx);
-  if (iter != renamed_regions.end()) {
-    increment_col = iter->second;
-    iter = renamed_regions.find(increment_col);
+int32_t maxRegion(const vector<vector<int>>& grid) {
+  const size_t numRows = grid.size();
+  if (numRows == 0) {
+    return 0;
   }
-  assert(iter == renamed_regions.end());
 
-  regions[increment_col] += increment;
-}
+  const size_t numColumns = grid[0].size();
 
-// Complete the maxRegion function below.
-int maxRegion(const vector<vector<int>>& grid) {
-  const int num_row = grid.size();
-  const int num_col = grid[0].size();
+  vector<vector<int>> groupIds(numRows);
+  for (size_t i = 0; i < numRows; ++i) {
+    groupIds[i].resize(numColumns);
+    std::fill(groupIds[i].begin(), groupIds[i].end(), std::numeric_limits<int32_t>::max());
+  }
 
-  int max_region = 0;
+  int32_t numGroups = 0;
+  vector<int32_t> groupSize;
 
-  vector<int> col_region(num_col, -1);
-  vector<int> cur_region(num_col, -1);
+  std::unordered_map<int32_t, int32_t> groupMap;
+  groupMap[std::numeric_limits<int32_t>::max()] = std::numeric_limits<int32_t>::max();
 
-  vector<int> regions;
-  unordered_map<int, int> renamed_regions;
+  auto addItemFn = [&grid, numRows, numColumns](auto& neighbours, int32_t rowIndex,
+                                                int32_t columnIndex) {
+    if (rowIndex >= 0 && columnIndex >= 0 && rowIndex < numRows && columnIndex < numColumns) {
+      if (grid[rowIndex][columnIndex] == 1) {
+        neighbours.emplace_back(rowIndex, columnIndex);
+      }
+    }
+  };
 
-  for (size_t i = 0; i < num_row; ++i) {
-    for (size_t j = 0; j < num_col; ++j) {
+  for (int32_t i = 0; i < numRows; ++i) {
+    for (int32_t j = 0; j < numColumns; ++j) {
       if (grid[i][j] == 0) {
-        cur_region[j] = -1;
-        // cout << "(-1,0) ";
         continue;
       }
 
-      if (i == 0) {
-        // first line
+      vector<std::pair<int32_t, int32_t>> neighbours;
 
-        if ((j > 0) && (cur_region[j - 1] != -1)) {
-          cur_region[j] = cur_region[j - 1];
-        } else {
-          // new region
-          cur_region[j] = regions.size();
-          regions.push_back(0);
-        }
+      addItemFn(neighbours, i - 1, j - 1);
+      addItemFn(neighbours, i - 1, j);
+      addItemFn(neighbours, i - 1, j + 1);
+      addItemFn(neighbours, i, j - 1);
+      addItemFn(neighbours, i, j);
+      addItemFn(neighbours, i, j + 1);
+      addItemFn(neighbours, i + 1, j - 1);
+      addItemFn(neighbours, i + 1, j);
+      addItemFn(neighbours, i + 1, j + 1);
 
-        IncreseRegionSize(regions, renamed_regions, cur_region[j]);
-      } else {
-        if (col_region[j] != -1) {
-          cur_region[j] = col_region[j];
-        } else if ((j > 0) && (col_region[j - 1] != -1)) {
-          cur_region[j] = col_region[j - 1];
-        } else if ((j < (num_col - 1)) && (col_region[j + 1] != -1)) {
-          cur_region[j] = col_region[j + 1];
-        } else {
-          // new region
-          cur_region[j] = regions.size();
-          regions.push_back(0);
-        }
+      int32_t minGroupId = std::numeric_limits<int32_t>::max();
 
-        IncreseRegionSize(regions, renamed_regions, cur_region[j]);
+      for_each(neighbours.begin(), neighbours.end(),
+               [&minGroupId, &groupMap, &groupIds](std::pair<int32_t, int32_t>& cell) {
+                 minGroupId = min(minGroupId, groupMap[groupIds[cell.first][cell.second]]);
+               });
 
-        if ((j > 0) && (cur_region[j - 1] != -1) && (cur_region[j - 1] != cur_region[j])) {
-          // merge regions
-          int new_region_idx = cur_region[j - 1];
-          auto iter = renamed_regions.find(new_region_idx);
-          new_region_idx = ((iter != renamed_regions.end()) ? iter->second : new_region_idx);
-
-          if (new_region_idx != cur_region[j]) {
-            IncreseRegionSize(regions, renamed_regions, new_region_idx, regions[cur_region[j]]);
-            regions[cur_region[j]] = 0;
-            assert(renamed_regions.find(new_region_idx) == renamed_regions.end());
-            renamed_regions[cur_region[j]] = new_region_idx;
-            cur_region[j] = new_region_idx;
-          }
-        }
+      if (minGroupId == std::numeric_limits<int32_t>::max()) {
+        numGroups++;
+        minGroupId = numGroups;
+        groupMap[numGroups] = numGroups;
+        groupSize.push_back(0);
       }
 
-      max_region = std::max(regions[cur_region[j]], max_region);
-      // cout << "(" << cur_region[j] << "," << regions[cur_region[j]] << ") ";
-    }
+      for (auto& cell : neighbours) {
+        const int32_t prevGroupId = groupIds[cell.first][cell.second];
+        if (prevGroupId != minGroupId) {
+          groupIds[cell.first][cell.second] = minGroupId;
+          groupSize[minGroupId - 1]++;
 
-    col_region = cur_region;
-    // cout << endl;
+          if (prevGroupId != std::numeric_limits<int32_t>::max()) {
+            groupMap[prevGroupId] = minGroupId;
+            groupSize[prevGroupId - 1]--;
+          }
+        }
+      };
+    }
   }
 
-  return max_region;
+  int32_t maxRegionSize = 0;
+
+  for (int32_t groupId = groupSize.size(); groupId > 0; --groupId) {
+    const int32_t mappedGroupId = groupMap[groupId];
+    if (mappedGroupId == groupId) {
+      maxRegionSize = max(maxRegionSize, groupSize[groupId - 1]);
+    } else {
+      const int32_t letfOver = groupSize[groupId - 1];
+      if (letfOver > 0) {
+        groupSize[mappedGroupId - 1] += letfOver;
+        groupSize[groupId - 1] = 0;
+      }
+    }
+  }
+
+  return maxRegionSize;
 }
 
 TEST_CASE("connected_cell", "[interview_prep_kit][graph][hard]") {

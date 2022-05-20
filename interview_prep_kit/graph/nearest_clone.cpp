@@ -18,61 +18,6 @@
 
 using namespace std;
 
-class ColorNode {
- public:
-  ColorNode(const long color, const int d = numeric_limits<int>::max(), const int label = -1)
-      : color_(color), distance_(d), visited_label_(label) {}
-  ~ColorNode() {}
-
-  long GetColor() const {
-    return color_;
-  }
-  int GetDistance() const {
-    return distance_;
-  }
-
-  void SetDistance(const int d, const int label) {
-    assert(!IsVisited());
-    distance_ = d;
-  }
-
-  bool IsVisited() const {
-    return (visited_label_ != -1);
-  }
-
-  int GetVisitedLabel() const {
-    return visited_label_;
-  }
-  void SetVisitedLabel(const int node_idx) {
-    assert(visited_label_ == -1);
-    visited_label_ = node_idx;
-  }
-
-  void AddAdjacentNode(const int node) {
-    adjacent_nodes_.push_back(node);
-  }
-  int AddInQueue(std::function<int(int)> lambda) const {
-    int distance = numeric_limits<int>::max();
-
-    for (size_t idx = 0; idx < adjacent_nodes_.size(); ++idx) {
-      distance = lambda(idx);
-      if (distance < numeric_limits<int>::max()) {
-        return distance;
-      }
-    }
-
-    return distance;
-  }
-
- private:
-  long color_;
-
-  int distance_;
-  int visited_label_;
-
-  vector<int> adjacent_nodes_;
-};
-
 /*
  * For the unweighted graph, <name>:
  *
@@ -81,81 +26,91 @@ class ColorNode {
  * 3. An edge exists between <name>_from[i] to <name>_to[i].
  *
  */
+class Node {
+ private:
+  vector<int32_t> _adjacentNodes;
+  int32_t _color;
+  int32_t _distance;
+  int32_t _startTargetNode;
 
-int findShortest(const int num_graph_nodes, const vector<int>& graph_from,
-                 const vector<int>& graph_to, const vector<long>& ids, const int val) {
-  // solve here
+ public:
+  Node() : _distance(-1), _color(-1), _startTargetNode(-1) {}
 
-  vector<ColorNode> nodes;
+  void SetColor(int32_t color) {
+    assert(_color == -1);
+    _color = color;
+  }
+  int32_t GetColor() const {
+    return _color;
+  }
 
-  auto ColorNodeComp = [](const ColorNode* lhs, const ColorNode* rhs) {
-    // dijkstra
-    return (lhs->GetDistance() > rhs->GetDistance());
-  };
+  void AddAdjacentNode(int32_t nodeIndex) {
+    _adjacentNodes.push_back(nodeIndex);
+  }
+  const vector<int32_t>& GetAdjacentNodes() const {
+    return _adjacentNodes;
+  }
 
-  priority_queue<ColorNode*, vector<ColorNode*>, decltype(ColorNodeComp)> visited_nodes(
-      ColorNodeComp);
+  void SetDistance(int32_t distance, int32_t startTargetNode) {
+    assert((_distance == -1) && (_startTargetNode == -1));
+    _distance = distance;
+    _startTargetNode = startTargetNode;
+  }
+  int32_t GetDistance() const {
+    return _distance;
+  }
 
-  int num_target_color_nodes = 0;
+  int32_t GetStartTargetNode() const {
+    return _startTargetNode;
+  }
+};
 
-  for (size_t idx = 0; idx < ids.size(); ++idx) {
-    const int cur_color = ids[idx];
-    if (cur_color == val) {
-      nodes.emplace_back(cur_color, 0, idx);
+int32_t findShortest(const int32_t graph_nodes, const vector<int>& graph_from,
+                     const vector<int>& graph_to, const vector<long>& ids, const int32_t val) {
+  std::queue<int32_t> visitedNodes;
+  vector<Node> nodes(graph_nodes);
 
-      num_target_color_nodes++;
-    } else {
-      nodes.emplace_back(cur_color);
+  int32_t numNodesofInputColor = 0;
+
+  for (size_t i = 0; i < graph_nodes; ++i) {
+    nodes[i].SetColor(ids[i]);
+
+    if (ids[i] == val) {
+      nodes[i].SetDistance(0, i);
+      visitedNodes.push(i);
+      numNodesofInputColor++;
     }
   }
 
-  if (num_target_color_nodes < 2) {
+  if (numNodesofInputColor < 2) {
     return -1;
   }
 
-  for (size_t idx = 0; idx < graph_from.size(); ++idx) {
-    nodes[graph_from[idx] - 1].AddAdjacentNode(graph_to[idx] - 1);
-    nodes[graph_to[idx] - 1].AddAdjacentNode(graph_from[idx] - 1);
+  for (size_t i = 0; i < graph_from.size(); ++i) {
+    nodes[graph_from[i] - 1].AddAdjacentNode(graph_to[i] - 1);
+    nodes[graph_to[i] - 1].AddAdjacentNode(graph_from[i] - 1);
   }
 
-  // add nodes in priority queue
-  for (size_t idx = 0; idx < ids.size(); ++idx) {
-    ColorNode& node = nodes[idx];
-    if (node.GetColor() == val) {
-      visited_nodes.push(&node);
-    }
-  }
+  while (visitedNodes.size() > 0) {
+    const int32_t curNodeIndex = visitedNodes.front();
+    const int32_t curDistance = nodes[curNodeIndex].GetDistance();
+    const int32_t startTargetNode = nodes[curNodeIndex].GetStartTargetNode();
+    visitedNodes.pop();
 
-  while (!visited_nodes.empty()) {
-    ColorNode* cur_node = visited_nodes.top();
-    // cout << cur_node->GetColor() << " : ";
-    // cout << cur_node->GetDistance() << " (" << cur_node->GetVisitedLabel() << ")" << endl;
-
-    visited_nodes.pop();
-
-    const int distance = cur_node->AddInQueue([&nodes, &visited_nodes, cur_node](int node_idx) {
-      ColorNode& next_node = nodes[node_idx];
-      if (next_node.IsVisited()) {
-        if (next_node.GetVisitedLabel() != cur_node->GetVisitedLabel()) {
-          return (next_node.GetDistance() + cur_node->GetDistance() + 1);
-        } else {
-          return numeric_limits<int>::max();
+    const auto& adjacentNodes = nodes[curNodeIndex].GetAdjacentNodes();
+    for (int32_t nodeIndex : adjacentNodes) {
+      if (nodes[nodeIndex].GetDistance() != -1) {
+        if (nodes[nodeIndex].GetStartTargetNode() != startTargetNode) {
+          return curDistance + nodes[nodeIndex].GetDistance() + 1;
         }
+      } else {
+        nodes[nodeIndex].SetDistance(curDistance + 1, startTargetNode);
+        visitedNodes.push(nodeIndex);
       }
-
-      next_node.SetDistance((cur_node->GetDistance() + 1), cur_node->GetVisitedLabel());
-
-      visited_nodes.push(&next_node);
-      return numeric_limits<int>::max();
-    });
-
-    if (distance < numeric_limits<int>::max()) {
-      return distance;
-    }
+    };
   }
 
-  assert(0);
-  return 0;
+  return -1;
 }
 
 TEST_CASE("nearest_clone", "[interview_prep_kit][graph][medium]") {
