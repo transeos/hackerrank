@@ -20,22 +20,25 @@ using namespace std;
 
 // Complete the makeAnagram function below.
 int makeAnagram(const string& a, const string& b) {
-  array<int, 26> characters_a = {};
-  array<int, 26> characters_b = {};
+  std::array<int32_t, 26> lettersA;
+  std::array<int32_t, 26> lettersB;
 
-  for (char c : a) {
-    characters_a[c - 'a']++;
-  }
-  for (char c : b) {
-    characters_b[c - 'a']++;
+  auto populateLettersFn = [](std::array<int32_t, 26>& letters, const string& word) {
+    std::fill(letters.begin(), letters.end(), 0);
+
+    std::for_each(word.begin(), word.end(), [&letters](char ch) { letters[ch - 'a']++; });
+  };
+
+  populateLettersFn(lettersA, a);
+  populateLettersFn(lettersB, b);
+
+  int32_t numDeletions = 0;
+
+  for (size_t i = 0; i < 26; i++) {
+    numDeletions += std::abs(lettersA[i] - lettersB[i]);
   }
 
-  int num_deletion = 0;
-  for (size_t idx = 0; idx < 26; ++idx) {
-    num_deletion += abs(characters_a[idx] - characters_b[idx]);
-  }
-
-  return num_deletion;
+  return numDeletions;
 }
 
 TEST_CASE("making_anagrams", "[interview_prep_kit][string][easy]") {

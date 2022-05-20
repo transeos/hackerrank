@@ -19,33 +19,30 @@
 using namespace std;
 
 // Complete the commonChild function below.
-int commonChild(const string& s1, const string& s2) {
-  const int str_len = s1.length();
-  assert(s2.length() == str_len);
+int32_t commonChild(const string& s1, const string& s2) {
+  const size_t rowSize = s1.length() + 1;
+  const size_t columnSize = s2.length() + 1;
 
-  vector<vector<int>> matched_str;
-  matched_str.resize(str_len + 1);
+  vector<vector<int32_t>> result(rowSize);
 
-  for (size_t i = 0; i <= str_len; ++i) {
-    matched_str[i].resize(str_len + 1);
-    matched_str[i][0] = 0;
-  }
+  for_each(result.begin(), result.end(), [columnSize](auto& column) {
+    column.resize(columnSize);
+    column[0] = 0;
+  });
 
-  for (size_t j = 0; j <= str_len; ++j) {
-    matched_str[0][j] = 0;
-  }
+  std::fill(result[0].begin(), result[0].end(), 0);
 
-  for (size_t i = 1; i <= str_len; ++i) {
-    for (size_t j = 1; j <= str_len; ++j) {
-      int data1 = ((s1[i - 1] == s2[j - 1]) + matched_str[i - 1][j - 1]);
-      int data2 = matched_str[i - 1][j];
-      int data3 = matched_str[i][j - 1];
-
-      matched_str[i][j] = std::max(data1, std::max(data2, data3));
+  for (size_t i = 1; i < rowSize; ++i) {
+    for (size_t j = 1; j < columnSize; ++j) {
+      if (s1[i - 1] == s2[j - 1]) {
+        result[i][j] = result[i - 1][j - 1] + 1;
+      } else {
+        result[i][j] = max(result[i - 1][j], result[i][j - 1]);
+      }
     }
   }
 
-  return matched_str[str_len][str_len];
+  return result[rowSize - 1][columnSize - 1];
 }
 
 TEST_CASE("common_child", "[interview_prep_kit][string][medium]") {

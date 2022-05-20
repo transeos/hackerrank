@@ -19,16 +19,9 @@
 using namespace std;
 
 // Complete the alternatingCharacters function below.
-int alternatingCharacters(const string& s) {
-  int num_deletions = 0;
-
-  for (size_t idx = 1; idx < s.length(); ++idx) {
-    if (s[idx] == s[idx - 1]) {
-      num_deletions++;
-    }
-  }
-
-  return num_deletions;
+int alternatingCharacters(string& s) {
+  auto it = std::unique(s.begin(), s.end());
+  return std::distance(it, s.end());
 }
 
 TEST_CASE("alternating_characters", "[interview_prep_kit][string][easy]") {
