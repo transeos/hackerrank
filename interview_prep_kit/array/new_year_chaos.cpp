@@ -18,73 +18,37 @@
 
 using namespace std;
 
-int fixPosition(vector<int>& q, int pos) {
-  const int cur_val = q[pos];
-  assert(cur_val != (pos + 1));
+void minimumBribes(vector<int>& q) {
+  size_t numBribes = 0;
 
-  if (cur_val == (pos + 2)) {
-    int ret_val = 0;
-
-    while (cur_val < q[pos + 1]) {
-      const int cur_ret_val = fixPosition(q, (pos + 1));
-      if (cur_ret_val < 0) return -1;
-      ret_val += cur_ret_val;
+  for (int64_t pos = (q.size() - 1); pos >= 0; --pos) {
+    if (q[pos] == (pos + 1)) {
+      continue;
     }
 
-    q[pos] = q[pos + 1];
-    q[pos + 1] = cur_val;
-    return (ret_val + 1);
-  }
-
-  if (cur_val == (pos + 3)) {
-    int ret_val = 0;
-
-    while (cur_val < q[pos + 2]) {
-      const int cur_ret_val = fixPosition(q, (pos + 2));
-      if (cur_ret_val < 0) return -1;
-      ret_val += cur_ret_val;
-    }
-
-    while (cur_val < q[pos + 1]) {
-      const int cur_ret_val = fixPosition(q, (pos + 1));
-      if (cur_ret_val < 0) return -1;
-      ret_val += cur_ret_val;
-    }
-
-    q[pos] = q[pos + 1];
-    q[pos + 1] = q[pos + 2];
-    q[pos + 2] = cur_val;
-    ret_val += 2;
-    return ret_val;
-  }
-
-  return -1;
-}
-
-// Complete the minimumBribes function below.
-void minimumBribes(vector<int> q) {
-  int swaps = 0;
-  int num_persons = q.size();
-
-  for (int idx = 0; idx < num_persons; ++idx) {
-    const int cur_val = q[idx];
-    if (cur_val == (idx + 1)) continue;
-
-    if (swaps > (2 * num_persons)) {
-      cout << "Too chaotic\n";
+    if (q[pos] > (pos + 3)) {
+      cout << "Too chaotic" << endl;
       return;
     }
 
-    int cur_swaps = fixPosition(q, idx);
-    if (cur_swaps < 0) {
-      cout << "Too chaotic\n";
-      return;
+    if ((q[pos - 1] == (pos + 1)) && (pos > 0)) {
+      int temp = q[pos];
+      q[pos] = q[pos - 1];
+      q[pos - 1] = temp;
+
+      pos++;
+      numBribes++;
+    } else if ((q[pos - 2] == (pos + 1)) && (pos > 1)) {
+      q[pos - 2] = q[pos - 1];
+      q[pos - 1] = q[pos];
+      q[pos] = pos + 1;
+
+      pos = std::min(pos + 2, static_cast<int64_t>(q.size()));
+      numBribes += 2;
     }
-    swaps += cur_swaps;
-    idx--;
   }
 
-  cout << swaps << endl;
+  cout << numBribes << endl;
 }
 
 TEST_CASE("new_year_chaos", "[interview_prep_kit][array][medium]") {

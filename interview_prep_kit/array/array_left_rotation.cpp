@@ -20,23 +20,13 @@
 using namespace std;
 
 // Complete the rotLeft function below.
-vector<int> rotLeft(const vector<int>& orig_arr, int d) {
-  if (d == 0) return orig_arr;
+vector<int> rotLeft(const vector<int>& a, int d) {
+  vector<int> rotArr(a.size());
 
-  const int num = orig_arr.size();
-  assert(d < num);
+  std::copy(a.begin(), a.begin() + d, rotArr.begin() + (a.size() - d));
+  std::copy(a.begin() + d, a.end(), rotArr.begin());
 
-  vector<int> new_arr(num);
-
-  for (size_t idx = 0; idx < (num - d); ++idx) {
-    new_arr[idx] = orig_arr[idx + d];
-  }
-
-  for (size_t idx = (num - d); idx < num; ++idx) {
-    new_arr[idx] = orig_arr[idx + d - num];
-  }
-
-  return new_arr;
+  return rotArr;
 }
 
 TEST_CASE("array_left_rotation", "[interview_prep_kit][array][easy]") {
