@@ -19,9 +19,9 @@
 using namespace std;
 
 // Complete the flippingBits function below.
-long flippingBits(const long n) {
-  const uint32_t input = n;
-  return (numeric_limits<uint32_t>::max() - n);
+constexpr int64_t flippingBits(int64_t n) {
+  const int64_t mask = (1L << 32) - 1L;
+  return (mask ^ n);
 }
 
 TEST_CASE("flipping_bits", "[interview_prep_kit][miscellaneous][easy]") {
