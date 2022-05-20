@@ -18,52 +18,29 @@
 
 using namespace std;
 
-unordered_map<uint64_t, int> super_digits;
+int superDigit(const string& n, const int k) {
+  int64_t sum = 0;
 
-int superDigit(const uint64_t n) {
-  if (n < 10) {
-    return n;
+  for (size_t i = 0; i < n.length(); ++i) {
+    sum += static_cast<int64_t>(n[i] - '0');
   }
 
-  auto iter = super_digits.find(n);
-  if (iter != super_digits.end()) {
-    return iter->second;
+  sum *= (int64_t)k;
+
+  auto calSuperDigitFn = [](int64_t n) {
+    int result = 0;
+    while (n > 0) {
+      result += n % 10L;
+      n /= 10L;
+    }
+    return result;
+  };
+
+  int result = calSuperDigitFn(sum);
+  while (result >= 10) {
+    result = calSuperDigitFn(result);
   }
-
-  int super_digit = 0;
-
-  uint64_t cur_num = n;
-  uint64_t prev_num = n;
-
-  while (cur_num >= 10) {
-    cur_num /= 10;
-    super_digit += (prev_num - (cur_num * 10));
-    prev_num = cur_num;
-  }
-
-  super_digit += cur_num;
-
-  super_digit = superDigit(super_digit);
-  super_digits[n] = super_digit;
-  return super_digit;
-}
-
-// Complete the superDigit function below.
-int superDigit(const string& big_num, int k) {
-  int super_digit = 0;
-  int last_idx = 0;
-
-  for (size_t idx = 18; idx < big_num.size(); idx += 18) {
-    super_digit += superDigit(stoul(big_num.substr((idx - 18), 18)));
-    super_digit = superDigit(super_digit);
-    last_idx = idx;
-  }
-
-  super_digit += superDigit(stoul(big_num.substr(last_idx)));
-
-  super_digit = superDigit(super_digit * k);
-
-  return super_digit;
+  return result;
 }
 
 TEST_CASE("recursive_digit_sum", "[interview_prep_kit][recursion][medium]") {

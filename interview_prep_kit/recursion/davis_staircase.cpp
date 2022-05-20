@@ -18,12 +18,13 @@
 
 using namespace std;
 
-#define STEP_MOD 10000000007L
-
 // Complete the stepPerms function below.
-int64_t stepPerms(const int n) {
-  if (n < 2) {
-    return n;
+constexpr int stepPerms(const int n) {
+  if (n <= 0) {
+    return 0;
+  }
+  if (n == 1) {
+    return 1;
   }
   if (n == 2) {
     return 2;
@@ -32,21 +33,19 @@ int64_t stepPerms(const int n) {
     return 4;
   }
 
-  int64_t cur_steps = 4;
-  int64_t prev_steps = 2;
-  int64_t prev_prev_steps = 1;
+  int prevPrevNumSteps = 1;
+  int prevNumSteps = 2;
+  int curNumSteps = 4;
 
-  for (size_t idx = 3; idx < n; ++idx) {
-    int64_t temp = (cur_steps + prev_steps + prev_prev_steps);
-    if (temp >= STEP_MOD) {
-      temp -= STEP_MOD;
-    }
-    prev_prev_steps = prev_steps;
-    prev_steps = cur_steps;
-    cur_steps = temp;
+  for (size_t i = 4; i <= (size_t)n; ++i) {
+    const int temp = curNumSteps;
+
+    curNumSteps = (curNumSteps + prevNumSteps + prevPrevNumSteps) % 10000000007;
+    prevPrevNumSteps = prevNumSteps;
+    prevNumSteps = temp;
   }
 
-  return cur_steps;
+  return curNumSteps;
 }
 
 TEST_CASE("davis_staircase", "[interview_prep_kit][recursion][medium]") {
