@@ -31,11 +31,43 @@ using std::vector;
  *  2. INTEGER k
  */
 
-int32_t hackerlandRadioTransmitters(const vector<int>& x, const int32_t k) {
-  return 0;
+int64_t hackerlandRadioTransmitters(vector<int>& x, const int32_t k) {
+  if (k <= 0) {
+    return x.size();
+  }
+
+  std::sort(x.begin(), x.end());
+
+  if (k >= (x.back() - x.front())) {
+    return 1;
+  }
+
+  int64_t towerCount = 0;
+  int64_t range = 1;
+
+  for (size_t i = 1; i < x.size(); ++i) {
+    const int64_t diff = x[i] - x[i - 1];
+    range += diff;
+    if (range > k + 1) {
+      // place tower at previous city
+      towerCount++;
+
+      range = diff - k;
+      if (range > 1) {
+        // outside the range of previous city
+        range = 1;
+      }
+    }
+  }
+
+  if (range > 0) {
+    towerCount++;
+  }
+
+  return towerCount;
 }
 
-TEST_CASE("hackerland_radio_transmitters", "[problem_solving][medium]") {
+TEST_CASE("hackerland_radio_transmitters", "[problem_solving][medium][ToDo]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   string first_multiple_input_temp;
