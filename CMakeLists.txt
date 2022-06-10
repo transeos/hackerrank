@@ -35,7 +35,8 @@ file(GLOB INTERVIEW_PREP_KIT_GREEDY_FILES interview_prep_kit/greedy/*.cpp)
 file(GLOB INTERVIEW_PREP_KIT_DP_FILES interview_prep_kit/DP/*.cpp)
 
 #problem solving
-file(GLOB PROBLEM_SOLVING problem_solving/*.cpp)
+file(GLOB PROBLEM_SOLVING problem_solving/easy/*.cpp)
+file(GLOB PROBLEM_SOLVING problem_solving/medium/*.cpp)
 
 # add precompiled headers
 target_include_directories(Catch2 INTERFACE 3rdParty/Catch2/single_include)
