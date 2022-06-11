@@ -32,7 +32,7 @@ void whatFlavors(const vector<int>& cost, const int money) {
   }
 }
 
-TEST_CASE("ice_cream_parlor", "[interview_prep_kit][search][medium]") {
+TEST_CASE("ctci_ice_cream_parlor", "[interview_prep_kit][search][medium]") {
   int t;
   cin >> t;
   cin.ignore(numeric_limits<streamsize>::max(), '\n');

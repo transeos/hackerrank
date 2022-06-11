@@ -57,23 +57,24 @@ class Chunk {
   void Compute() {
     _match = true;
 
-    int64_t numMisMatch = 0;
+    int32_t numMisMatch = 0;
 
     for (size_t i = 0; i < 4; ++i) {
       if (_geneCount[i] < BestMismatch[i]) {
         _match = false;
-      } else {
         numMisMatch += BestMismatch[i] - _geneCount[i];
       }
     }
 
-    //_priority = (int64_t)((_len) << 32L) + (int64_t)numMisMatch;
-    _priority = _len;
+    _priority = ((int64_t)(_len + numMisMatch) << 32L) + (int64_t)numMisMatch;
+    //_priority = _len;
     //_priority = _len + numMisMatch;
   }
 
  public:
   static std::array<int32_t, 4> BestMismatch;
+
+  Chunk() {}
 
   Chunk(const string& gene, const int32_t startIndex, const int32_t len)
       : _startIndex(startIndex), _len(len) {
@@ -97,7 +98,7 @@ class Chunk {
     Compute();
   }
 
-  void Update(const Chunk& prevChunk, const char newChar, const bool incrementAfter) {
+  Chunk(const Chunk& prevChunk, const char newChar, const bool incrementAfter) {
     _startIndex = prevChunk._startIndex;
     if (!incrementAfter) {
       _startIndex--;
@@ -181,56 +182,58 @@ int32_t steadyGene(const string& gene) {
     return 0;
   }
 
-  vector<Chunk> visitedChunks;
+  vector<std::unordered_map<int32_t, Chunk>> visitedChunks(gene.length() - misMatchCount + 1);
 
-  auto compareChunkFn = [&visitedChunks](const int32_t leftIndex,
-                                         const int32_t rightIndex) -> bool {
-    return visitedChunks[leftIndex] < visitedChunks[rightIndex];
+  auto compareChunkFn = [&visitedChunks](const std::pair<int32_t, int32_t>& left,
+                                         const std::pair<int32_t, int32_t>& right) -> bool {
+    return visitedChunks[left.first][left.second] > visitedChunks[right.first][right.second];
   };
 
-  std::set<int32_t, std::function<bool(int32_t, int32_t)>> chunks(compareChunkFn);
+  std::priority_queue<std::pair<int32_t, int32_t>, vector<std::pair<int32_t, int32_t>>,
+                      decltype(compareChunkFn)>
+      chunks(compareChunkFn);
 
-  visitedChunks.emplace_back(gene, 0, misMatchCount);
-  if (visitedChunks[0].Match()) {
+  visitedChunks[0][misMatchCount] = Chunk(gene, 0, misMatchCount);
+  if (visitedChunks[0][misMatchCount].Match()) {
     return misMatchCount;
   }
-  chunks.insert(0);
+  chunks.emplace(0, misMatchCount);
 
   for (int32_t i = 1; i < gene.length() - misMatchCount; ++i) {
-    visitedChunks.emplace_back(visitedChunks[i - 1], gene[i - 1], gene[i + misMatchCount - 1]);
-    if (visitedChunks.back().Match()) {
+    visitedChunks[i][misMatchCount] =
+        Chunk(visitedChunks[i - 1][misMatchCount], gene[i - 1], gene[i + misMatchCount - 1]);
+    if (visitedChunks[i][misMatchCount].Match()) {
       return misMatchCount;
     }
-    chunks.insert(i);
+    chunks.emplace(i, misMatchCount);
   }
 
   while (!chunks.empty()) {
-    const Chunk& curChunk = visitedChunks[*chunks.begin()];
-    chunks.erase(chunks.begin());
+    const auto curIndex = chunks.top();
+    Chunk& curChunk = visitedChunks[curIndex.first][curIndex.second];
+    chunks.pop();
     const int32_t curStart = curChunk.StartIndex();
     const int32_t newLen = curChunk.Len() + 1;
 
     if (curStart != 0) {
-      if (visitedChunks[curStart - 1].Len() < newLen) {
-        visitedChunks[curStart - 1].Update(curChunk, gene[curStart - 1], false);
-        if (visitedChunks[curStart - 1].Match()) {
+      if (visitedChunks[curStart - 1].find(newLen) == visitedChunks[curStart - 1].end()) {
+        visitedChunks[curStart - 1][newLen] = Chunk(curChunk, gene[curStart - 1], false);
+        if (visitedChunks[curStart - 1][newLen].Match()) {
           return newLen;
         }
 
-        chunks.erase(curStart - 1);
-        chunks.insert(curStart - 1);
+        chunks.emplace(curStart - 1, newLen);
       }
     }
 
     if ((curStart + newLen - 1) < gene.length()) {
-      if (visitedChunks[curStart].Len() < newLen) {
-        visitedChunks[curStart].Update(curChunk, gene[curStart + newLen - 1], true);
-        if (visitedChunks[curStart].Match()) {
+      if (visitedChunks[curStart].find(newLen) == visitedChunks[curStart].end()) {
+        visitedChunks[curStart][newLen] = Chunk(curChunk, gene[curStart + newLen - 1], true);
+        if (visitedChunks[curStart][newLen].Match()) {
           return newLen;
         }
 
-        chunks.erase(curStart);
-        chunks.insert(curStart);
+        chunks.emplace(curStart, newLen);
       }
     }
   }
@@ -239,7 +242,7 @@ int32_t steadyGene(const string& gene) {
   return -1;
 }
 
-TEST_CASE("bear_and_steady_gene", "[problem_solving][medium][star]") {
+TEST_CASE("bear_and_steady_gene", "[problem_solving][medium][star][incomplete]") {
   ofstream fout(getenv("OUTPUT_PATH"));
 
   string n_temp;
